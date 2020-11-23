@@ -1,0 +1,164 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 20%; font-size: 22px;
+	}
+	.col-xs-6 img{
+		height: 320px;
+	}
+	.padding_class{
+		padding: 0 10%;
+		text-align: center;
+		margin-bottom: 30px;
+	}
+	.padding_class1{
+		padding: 5px 0;
+		margin:5px 0;
+	}
+</style>
+<div id="content_index" >
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;border-bottom: 1px solid">
+		<form action="" method="post" enctype="multipart/form-data" autocomplete="off" id="from_id">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="select_action">
+			<div>
+				<select style="width: 10%;padding: 5px 0;margin: 5px 0" name="artist" id="artist_id" onchange="select_onchange()">
+					<option value="A-Z" {% if artist == "A-Z" %} selected {% endif %}>Artist A-Z</option>
+					<option value="A-D" {% if artist == "A-D" %} selected {% endif %}>A-D</option>
+					<option value="E-H" {% if artist == "E-H" %} selected {% endif %}>E-H</option>
+					<option value="I-L" {% if artist == "I-L" %} selected {% endif %}>I-L</option>
+					<option value="M-P" {% if artist == "M-P" %} selected {% endif %}>M-P</option>
+					<option value="Q-T" {% if artist == "Q-T" %} selected {% endif %}>Q-T</option>
+					<option value="U-X" {% if artist == "U-X" %} selected {% endif %}>U-X</option>
+					<option value="Y-Z" {% if artist == "Y-Z" %} selected {% endif %}>Y-Z</option>
+				</select>
+			</div>
+			<div>
+				<select style="width: 10%;padding: 5px 0;margin: 5px 0" name="year" id="year_id" onchange="select_onchange()">
+					<option value="0" {% if year == "0" %} selected {% endif %}>Year</option>
+					<option value="2020" {% if year == "2020" %} selected {% endif %}>2020</option>
+					<option value="2019" {% if year == "2019" %} selected {% endif %}>2019</option>
+					<option value="2018" {% if year == "2018" %} selected {% endif %}>2018</option>
+					<option value="2017" {% if year == "2017" %} selected {% endif %}>2017</option>
+					<option value="2016" {% if year == "2016" %} selected {% endif %}>2016</option>
+					<option value="2015" {% if year == "2015" %} selected {% endif %}>2015</option>
+					<option value="2014" {% if year == "2014" %} selected {% endif %}>2014</option>
+					<option value="2013" {% if year == "2013" %} selected {% endif %}>2013</option>
+					<option value="2012" {% if year == "2012" %} selected {% endif %}>2012</option>
+					<option value="2011" {% if year == "2011" %} selected {% endif %}>2011</option>
+					<option value="2010" {% if year == "2010" %} selected {% endif %}>2010</option>
+				</select>
+			</div>
+			<div>
+				<select style="width: 10%;padding: 5px 0;margin: 5px 0" name="medium" id="medium_id" onchange="select_onchange()">
+					<option value="all">Medium</option>
+					{% for m in medium_list %}
+						<option value="{{ m.name }}" {% if m.name == medium %} selected {% endif %}>{{ m.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div style="text-align: right;">
+				<input type="text" name="search" value="{{ search }}" placeholder="Search Exhibitions" spadding_classtyle="width: 10%;border: none;border-bottom: 1px solid ">
+				<span class="glyphicon glyphicon-search" style="cursor: pointer;" onclick="submit()"></span>
+			</div>
+		</form>
+	</div>
+
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;">
+		<div style="font-size: 25px;font-weight: bold; margin: 0 0 20px 0">On Now</div>
+		{% for onnow in onnows %}
+		<div class="col-xs-6 padding_class" style="height: 400px;"  onclick="submit_artwork({{ onnow.on_now_artwork.id }})">
+			<img src="{{ onnow.on_now_artwork.img.url}}" style="width: 100%;">
+			<div class="padding_class1 font_size_24" class="border_radius_class">
+				<span style="cursor:pointer;">{{ onnow.on_now_artwork.title }}</span>
+			</div>
+			<div class="border_radius_class font_size_18">{{ onnow.on_now_artwork.year }}/{{ onnow.on_now_artwork.artist }}</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;">
+		<div class="font_size_24" style="font-weight: bold; margin: 0 0 20px 0">Past Exhibitions</div>
+		<div id="data_id">
+			{% for past in past_exhibitions %}
+			<div class="col-xs-3" style="padding: 0 5%;text-align: center;margin-bottom: 30px; height: 200px;" onclick="submit_artwork({{ past.id }})">
+				<img src="{{ past.img.url }}" style="width: 100%;">
+				<div class="border_radius_class padding_class1 font_size_16">
+					<span style="cursor:pointer;">{{ past.title }}</span>
+				</div>
+				<div class="border_radius_class font_size_14">{{ past.year }}/{{ past.artist }}</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% if more_flag == 'true' %}
+		<div style="text-align: center;" class="col-xs-12" id="more_data_id">
+			<input type="hidden" name="page_index" id="page_index_id" value="1">
+			<button type="button" class="border_radius_class" style="background: #ccc;border: none;outline: none;padding: 5px 100px; font-weight: bold;" onclick="more_data()">MORE</button>
+		</div>
+		{% endif %}
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+
+	$('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+	// Query to submit
+	function submit(){
+		$("#from_id").submit()
+	}
+	// Called when the drop-down value changes
+	function select_onchange(){
+		$("#from_id").submit()
+	}
+	// Go to the details page
+	function submit_artwork(id){
+		window.location.href='/index_exhibition_detail/' + id +'/'
+	};
+
+	// See more data
+	function more_data(){
+		var page_index = $("#page_index_id").val()
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action': 'more_data_action',
+                'page_index': page_index,
+            },
+            success:function(data){
+            	var _html = ''
+            	for (var i = 0; i < data.data.length; i++) {
+            		console.log(data.data[i].data_img)
+            		_html += '<div class="col-xs-3" style="padding: 0 5%;text-align: center;margin-bottom: 30px;height: 200px;"><img src="'+ data.data[i].data_img +'" style="width: 100%;"><div class="border_radius_class padding_class1 font_size_16"><span style="cursor:pointer;" onclick="submit_artwork('+ data.data[i].id +')">'+ data.data[i].title +'</span></div><div class="border_radius_class font_size_14">'+ data.data[i].year +'/'+ data.data[i].artist +'</div></div>'
+            	};
+            	$('#data_id').append(_html);
+            	// Determine if there is more data
+            	if(data['more_flag'] == 'false'){
+            		$("#more_data_id").attr("style","display:none;");
+            	}else{
+            		var index = parseInt(page_index) + 1
+            		$("#page_index_id").val(index)
+            	}
+            }
+        });
+	};
+
+</script>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+	.foot_ul li{
+		list-style: none;
+		width: 30%;
+		display: inline-block;
+		text-align: center;
+	}
+</style>
+
+<div id="content_index" style="padding: 10px 10%">
+	<div id="myCarousel" class="carousel slide" style="margin-bottom: 20px">
+		<!-- （Carousel） index -->
+		<ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>
+		</ol>   
+		<!-- （Carousel）project -->
+		<div class="carousel-inner">
+			<div class="item active">
+				<img src="{% static 'images/index2.png' %}" alt="First slide">
+			</div>
+			<div class="item">
+				<img src="{% static 'images/index3.png' %}" alt="Second slide">
+			</div>
+			<div class="item">
+				<img src="{% static 'images/index1.png' %}" alt="Third slide">
+			</div>
+		</div>
+		<!-- Carousel）navigation -->
+		<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div> 
+
+	<div style="padding: 0 50px;margin-bottom: 20px;display: inline-block;">
+		<div class="col-xs-8">
+			<div class="col-xs-12 font_size_32" style="text-align: center;font-weight: bold;margin-bottom: 20px;">what is Fun?</div>
+			<ul>
+				<li class="li_stytl_class" style="vertical-align: top;">Preview your artwork in any space you like!</li>
+				<li class="li_stytl_class">Comments, thumb-up and Favorites, there's always one you like!</li>
+				<li class="li_stytl_class">Shop with love and support charity events with us!</li>
+				<li class="li_stytl_class">It does not matter what material we use. We need the technique and we need the idea. And then we need the poetry, the love that transforms the material into a piece of art. I hope it whets your appetite to come to the show.</li>
+			</ul>
+		</div>
+		<div class="col-xs-4" style="text-align: right;margin-top: 50px;">
+			<img src="{% static 'images/fun_right.jpg' %}" style="width: 100%">
+		</div>
+	</div>
+
+	<div style="padding: 0 50px; margin-bottom: 20px; display: inline-block;">
+		<div style="text-align: center;margin-bottom: 20px">
+			<span class="font_size_32" style="text-align: center;font-weight: bold;">Popular Exhibitions</span>
+		</div>
+			{% for h in artwork_lists %}
+				<div class="col-xs-4">
+					<img src="{{ h.img.url }}" style="width: 100%">
+					<div class="font_size_18" style="width: 100%; height: 30px; text-align: center; margin-top: 10px;font-weight: bold; cursor:pointer;" onclick="artwork_detail({{ h.id }})">{{ h.title }}</div>
+				</div>
+			{% endfor %}
+		
+	</div>
+
+	<hr style="margin-right: 50px;margin-left: 50px">
+
+	<div style="padding: 0 50px;margin-bottom: 20px;display: inline-block;width: 100%">
+		
+		<div class="col-xs-4">
+			<img src="{% static 'images/application_left.png' %}" style="width: 100%; height: 300px">
+		</div>
+		<div class="col-xs-8">
+			<div style="margin: 50px 20%; height: 40px;">
+				<span class="font_size_32" style="text-align: center;font-weight: bold;">Application for exhibition</span>
+			</div>
+			<div style="margin: 0 20%; height: 240px;margin-top: 10px;">
+				<p class="font_size_24" style="margin: 10px 0px;">Thank you for your support of "Fun".</p>
+				<p class="font_size_18" style="margin: 0px 0px;">The process of applying for the exhibition is subject to the official information. At this stage, you can first contact our staff by email or phone, please see below for details.</p>
+			</div>
+		</div>
+	</div>
+
+	<div><img src="{% static 'images/getin.jpg' %}" style="width: 100%; margin: 20px 0px;"></div>
+
+	<div>
+		<div style="text-align: center;margin-bottom: 20px">
+			<span class="font_size_32" style="text-align: center;font-weight: bold;">Get In Touch</span>
+		</div>
+		<ul style="padding: 0 30%" class="foot_ul">
+			<li>
+				<span class="glyphicon glyphicon-earphone font_size_20" style="margin-right: 10px;"></span>
+				<p style="margin-top: 10px">Phone</p>
+				<p style="margin-right: 6px;">07421234512</p>
+			</li>
+			<li>
+				<span class="glyphicon glyphicon-envelope font_size_20"></span>
+				<p style="margin-top: 10px">Email</p>
+				<p>DPXXi@163.com</p>
+			</li>
+			<li style="vertical-align: top;">
+				<span class="glyphicon glyphicon-map-marker font_size_20" style="margin-left: 10px;"></span>
+				<p style="margin-top: 10px">Address</p>
+				<p style="margin-left : 10px;">Fun-website，Second Floor, Peek House20 Eastcheap，London, England EC3M 1EB</p>
+			</li>
+		</ul>
+		<!-- <div class="" style="">
+			<span class="glyphicon glyphicon-earphone font_size_20" style="margin-right: 10px;"></span>
+			<p style="margin-top: 10px">Phone</p>
+			<p style="margin-right: 6px;">07421234512</p>
+		</div>
+		<div class="" style="text-align: center;">
+			<span class="glyphicon glyphicon-envelope font_size_20"></span>
+			<p style="margin-top: 10px">Email</p>
+			<p>DPXXi@163.com</p>
+
+		</div>
+		<div class="">
+			<span class="glyphicon glyphicon-map-marker font_size_20" style="margin-left: 10px;"></span>
+			<p style="margin-top: 10px">Address</p>
+			<p style="margin-left : 10px;">Fun-website，Second Floor, Peek House20 Eastcheap，London, England EC3M 1EB</p>
+		</div> -->
+		<div style="text-align: center;">
+			<div style="width: 30%;display: inline-block;">
+				<div style="margin-top: 10px">
+					<input type="text" id="touch_name_id" name="touch_name" placeholder=" Name " style="width: 40%; background-color: #eee;border: 0px; height: 30px;">
+					<input type="text" id="touch_email_id" name="touch_email" placeholder=" Email " style="width: 40%;margin-left: 5%; background-color: #eee;border: 0px; height: 30px;">
+				</div>
+				<div style="margin-top: 10px">
+					<input type="text" id="touch_subject_id" name="touch_subject" placeholder=" Subject " style="width: 85.5%; background-color: #eee;border: 0px; height: 30px;">
+				</div>
+				<div style="margin-top: 10px">
+					<textarea id="touch_message_id" name="touch_message" placeholder=" Message " style="width: 85.5%; height: 80px; background-color: #eee; border: 0px;"></textarea>
+				</div>
+				<div style="margin-top: 10px;">
+					<button type="button" style="background: #218bca;border: none;padding: 5px 30px;color: white;cursor: pointer;outline: none;" onclick="touch_submit()">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+	$('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+	function touch_submit(){
+		var touch_name = $("#touch_name_id").val()
+		var touch_email = $("#touch_email_id").val()
+		var touch_subject = $("#touch_subject_id").val()
+		var touch_message = $("#touch_message_id").val()
+		if(touch_name.length > 0 && touch_email.length > 0 && touch_subject.length > 0 && touch_message.length > 0){
+			$.ajax({
+	            url:'/touch/',
+	            type:'post',
+	            dataType:'json',
+	            data:{
+	                'touch_name': touch_name,
+	                'touch_email': touch_email,
+	                'touch_subject': touch_subject,
+	                'touch_message': touch_message,
+	                
+	            },
+	            success:function(data){
+	            	alert('Thank you for your suggestion!')
+	            	$("#touch_name_id").val('')
+	            	$("#touch_email_id").val('')
+	            	$("#touch_subject_id").val('')
+	            	$("#touch_message_id").val('')
+	            }
+	        });
+			
+		}else{
+			alert('Please fill in all the information when submitting the proposal!')
+		}
+	};
+
+	// detail
+	function artwork_detail(id){
+		window.location.href = '/index_exhibition_detail/' + id + '/'
+	}
+</script>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

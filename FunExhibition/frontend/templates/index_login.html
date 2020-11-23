@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.container {
+	    position: fixed;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    left: 0;
+	    text-align: center;
+	    font-size: 0;
+	    white-space: nowrap;
+	    overflow: auto;
+	}
+
+	.container:after {
+	    content: '';
+	    display: inline-block;
+	    height: 100%;
+	    vertical-align: middle;
+	}
+
+	.dialog {
+	    display: inline-block;
+	    vertical-align: middle;
+	    text-align: left;
+	    font-size: 14px;
+	    white-space: normal;
+	    width: 500px;
+	    height: 300px;
+	    padding-left: 15%
+	} 
+	</style>
+</head>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<body style="background: url('{% static 'images/index1.png' %}');background-size: cover;">
+	<div class="container">
+		<div class="dialog">
+			<div style="margin-bottom: 20px">
+				<div>USERNAME</div>
+				<div><input type="text" id="user_name_id" name="user_name" style="width: 250px;height: 25px"></div>
+			</div>
+			<div style="margin-bottom: 20px">
+				<div>PASSWORD</div>
+				<div><input type="password" id="password_id" name="password" style="width: 250px;height: 25px"></div>
+			</div>
+
+			<div>
+				<button style="border: none;background: #0c73f3;color: #fff;padding: 1% 5%;outline: none;cursor: pointer;" onclick="submit()">Submit</button>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	function submit(){
+		var user_name = $("#user_name_id").val()
+		var password = $("#password_id").val()
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'user_name': user_name,
+                'password': password,
+                'action': 'login_action',
+                
+            },
+            success:function(data){
+            	console.log(data)
+            	if(data['data'] == 'success'){
+            		window.location.href = '/index_home/'
+            	}else{
+            		alert('The user or password is incorrect!')
+            	}
+            	
+            }
+        });
+	}
+	
+</script>
+</html>

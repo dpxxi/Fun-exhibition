@@ -1,0 +1,393 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style1.css' %}">
+<link rel="stylesheet" href="{% static 'css/comment.css' %}">
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 20%; font-size: 22px;
+	}
+    .user_img{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        vertical-align: bottom;
+    }
+</style>
+<div id="content_index" style="padding: 0 10%;">
+
+	<div style="padding: 0 50px;margin-bottom: 20px;display: inline-block;width: 100%; margin-top: 30px;">
+		<div class="font_size_30" style="font-weight: bold;"><span>{{ artwork.title }}</span></div>
+        <div class="font_size_18">
+            <span>
+                <span style="font-weight: bold;">{{ artwork.time }}·</span>
+                {{ artwork.artist }}
+            </span>
+        </div>
+	</div>
+
+	<div style="padding: 0 50px;margin-bottom: 20px;display: inline-block;width: 100%;">
+		<div  class="font_size_14">
+			&nbsp;&nbsp;&nbsp;&nbsp;
+            {% autoescape off %}
+                {{ artwork.content }}
+            {% endautoescape %}
+		</div>
+	</div>
+
+	<div style="padding: 0 50px;display: inline-block;width: 100%;">
+		<img src="{{ artwork.img.url }}" style="width: 100%;margin-bottom: 10px;">
+		<div>
+			<div class="col-xs-4">
+				<span class="glyphicon glyphicon-eye-open font_size_24"></span>
+				<span style="font-size: 20px;vertical-align: bottom;">{{ artwork.look_number }}</span>
+			</div>
+			<div class="col-xs-4" style="text-align: center;">
+				<span class="glyphicon glyphicon-comment font_size_24"></span>
+				<span style="font-size: 20px;vertical-align: bottom;">{{ artwork.comment_number }}</span>
+			</div>
+			<div class="col-xs-4" style="text-align: right;">
+                <input type="hidden" name="likeflag" id="likeflag_id" value="{{ likeflag }}">
+				<span id="like_stytl_id" class="glyphicon glyphicon-heart font_size_24" onclick="fabulous(this)"></span>
+				<span style="font-size: 20px;vertical-align: bottom;" id="fabulous_number_id">{{ artwork.fabulous_number }}</span>
+			</div>
+		</div>
+
+		<div style="margin-top: 40px">
+			<div class="commentAll">
+			    <!--Comments begin-->
+			    <div class="reviewArea clearfix">
+			        <textarea id="textarea_id" class="content comment-input" placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea>
+			        <a href="javascript:;" class="plBtn" onclick="submit_textarea()">Comments</a>
+			    </div>
+			    <!--Comments end-->
+			    <!--Reply begin-->
+			    <div class="comment-show" id="show_id">
+                    {% for i in comment %}
+			        <div class="comment-show-con clearfix" id="comment_id__{{ i.id }}">
+			            <div class="comment-show-con-img pull-left">
+                            {% if i.comment_user.image %}
+                                <img class="user_img" src="{{ i.comment_user.image.url }}" alt="">
+                            {% else %}
+                                <img class="user_img" src="{% static 'images/header-img-comment_03.png' %}" alt="">
+                            {% endif %}
+                        </div>
+			            <div class="comment-show-con-list pull-left clearfix">
+			                <div class="pl-text clearfix">
+			                    <a href="#" class="comment-size-name">{{ i.comment_user.name }} : </a>
+			                    <span class="my-pl-con">&nbsp;{{ i.comment_text }}</span>
+			                </div>
+			                <div class="date-dz">
+			                    <span class="date-dz-left pull-left comment-time">{{ i.create_time | date:"Y-m-d H:i:s"}}</span>
+                                <span class="date-dz-pl pl-hf hf-con-block pull-left" style="padding-top:7px; margin-left:10px; color: blue;" onclick="reply({{ i.id }})">Reply</span>
+                                <span style="padding-top:7px; margin-left:10px;">
+                                    <input type="hidden" name="like_stytl_chat" id="like_stytl_chat_{{ i.id }}" value="0">
+                                    {% if i.fabulous_num > 0 %}
+                                    <span id="like_stytl_{{ i.id }}" style="color: red" class="glyphicon glyphicon-heart font_size_18" onclick="fabulous_chat({{ i.id }})"></span>
+                                    {% else %}
+                                    <span id="like_stytl_{{ i.id }}" class="glyphicon glyphicon-heart font_size_18" onclick="fabulous_chat({{ i.id }})"></span>
+                                    {% endif %}
+                                    <span style="font-size: 18px;vertical-align: bottom;" id="fabulous_number_{{ i.id }}">{{ i.fabulous_num }}</span>
+                                </span>
+			                </div>
+                            <!--Display sub-category data  end-->
+                            <div id="reply_user_all_{{ i.id }}">
+                                {% for c in i.get_children %}
+                                <div class="hf-list-con" style="background-color:white;" id="reply_user_{{ c.id }}">
+                                    <div class="comment-show-con clearfix" id="comment_id__{{ c.id }}">
+                                        <div class="comment-show-con-img pull-left">
+                                            {% if c.comment_user.image %}
+                                                <img class="user_img" src="{{ c.comment_user.image.url }}" alt="">
+                                            {% else %}
+                                                <img class="user_img" src="{% static 'images/header-img-comment_03.png' %}" alt="">
+                                            {% endif %}
+                                        </div>
+                                        <div class="comment-show-con-list pull-left clearfix">
+                                            <div class="pl-text clearfix">
+                                                <a href="#" class="comment-size-name">{{ c.comment_user.name }} : </a>
+                                                <span class="my-pl-con">&nbsp;{{ c.comment_text }}</span>
+                                            </div>
+                                            <div class="date-dz">
+                                                <span class="date-dz-left pull-left comment-time">{{ c.create_time | date:"Y-m-d H:i:s"}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+			                <div class="hf-list-con" style="background-color:white;display: none;" id="reply_comment_{{i.id}}">
+                                <div class="reviewArea clearfix">
+                                    <textarea id="textarea_id_{{ i.id }}" class="content comment-input" placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea>
+                                    <a href="javascript:;" class="plBtn" onclick="submit_reply({{i.id}})">Comments</a>
+                                </div>         
+                            </div>
+			            </div>
+			        </div>
+                    {% endfor %}
+			        
+			    <!--Reply end-->
+			</div>
+
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="{% static 'js/jquery.flexText.js' %}"></script>
+<script type="text/javascript">
+    /*<input type="hidden" name="like_stytl_chat" id="like_stytl_chat_{{ i.id }}" value="0">
+                                    <span id="like_stytl_{{ i.id }}" class="glyphicon glyphicon-heart font_size_18" onclick="fabulous_chat({{ i.id }})"></span>
+                                    <span style="font-size: 18px;vertical-align: bottom;" id="fabulous_number_{{ i.id }}">{{ i.fabulous_num }}</span>*/
+    function fabulous_chat(id){
+        console.log(id)
+        if(user != undefined && user.length>0){
+            $.ajax({
+                url:'',
+                type:'post',
+                dataType:'json',
+                data:{
+                    'action': 'fabulous_chat_action',
+                    'id':id             
+                },
+                success:function(data){
+                    var likeflag = data.data
+                    likeflag = parseInt(likeflag)
+                    console.log('8888888')
+                    console.log(data.data)
+                    // Zero is the record of thumb up
+                    if (likeflag == 1){
+                        console.log('********')
+                        $("#like_stytl_" + id).css("color", 'red')
+                    }else{
+                        console.log('uuuuuu')
+                        $("#like_stytl_" + id).css("color", 'black')
+                    }
+                    $("#like_stytl_chat_" + id).val(likeflag)
+                    var num = $("#fabulous_number_" + id).html()
+                    num = parseInt(num)
+                    if (likeflag == 1){
+                        num = num + 1
+                    }else{
+                        if(num != 0){
+                            num = num - 1
+                        }
+                    }
+                    $("#fabulous_number_" + id).text(num)
+                }
+            });
+        }else{
+            alert('Please login the user to like it!')
+        }
+
+    };
+    // Initializes the heart color
+    like_color()
+    function like_color(){
+        var likeflag = $("#likeflag_id").val()
+        if (likeflag == 0) {
+            $("#like_stytl_id").css("color", 'black')
+        }else{
+            $("#like_stytl_id").css("color", 'red')
+        }
+    }
+
+	var user = '{{ user|safe }}'
+    //  thumbs up
+	function fabulous(obj){
+        var likeflag = $("#likeflag_id").val()
+        likeflag = parseInt(likeflag)
+		if(user != undefined && user.length>0){
+			$.ajax({
+	            url:'',
+	            type:'post',
+	            dataType:'json',
+	            data:{
+	                'action': 'fabulous_action',
+	                'likeflag':likeflag             
+	            },
+	            success:function(data){
+                    var num = document.getElementById('fabulous_number_id').innerText // The number of thumb up
+                    num = parseInt(num)
+                    // Zero is the record of thumb up
+	            	if (likeflag == 0){
+                        likeflag = 1
+                        $("#like_stytl_id").css("color", 'red')
+                        document.getElementById("fabulous_number_id").innerText = num + 1
+                    }else{
+                        likeflag = 0
+                        $("#like_stytl_id").css("color", 'black')
+                        document.getElementById("fabulous_number_id").innerText = num - 1 
+                    }
+
+                    console.log('yanse')
+                    console.log(likeflag)
+                    $("#likeflag_id").val(likeflag)
+	            }
+	        });
+		}else{
+			alert('Please login the user to like it!')
+		}
+	}
+	
+</script>
+
+<!--textarea Highly adaptive-->
+<script type="text/javascript">
+    $(function () {
+        $('.content').flexText();
+    });
+</script>
+<!--textarea Limited number of words-->
+<script type="text/javascript">
+    function keyUP(t){
+        var len = $(t).val().length;
+        if(len > 139){
+            $(t).val($(t).val().substring(0,140));
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    $('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+
+
+    // click Reply
+    function reply(id){
+        $("#reply_comment_"+id).show()
+    };
+    // Submit to the background Reply
+    function submit_reply(id){
+        var myDate = new Date();
+        //Get current year
+        var year = myDate.getFullYear();
+        //Get current month
+        var month = myDate.getMonth()+1;
+        //Get current date
+        var date = myDate.getDate();
+        var h = myDate.getHours();       //Get current hours(0-23)
+        var m = myDate.getMinutes();     //Get current minutes(0-59)
+        if(m<10) m = '0' + m;
+        var s=myDate.getSeconds();
+        if(s<10) s = '0' + s;
+        var now = year+'-'+month+"-"+date+" "+h+':'+m+":"+s;
+
+        var content = $("#textarea_id_"+id).val() // Comments
+        if(content.length==0){
+            alert('Comment content cannot be empty！')
+            return
+        }
+        $.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'submit_reply',
+                'reply_user_id':id,
+                'artwork_id':'{{ artwork.id }}',
+                'content':content,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                console.log(data)
+                if (data.code == 0) {
+                    //Create the Comments module dynamically
+                    oHtml = '<div class="hf-list-con" style="background-color:white;">'+
+                                '<div class="comment-show-con clearfix">'+
+                                    '<div class="comment-show-con-img pull-left"><img class="user_img" src="'+ data.img +'" alt=""></div>'+
+                                    '<div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix">'+
+                        '<a href="#" class="comment-size-name">'+data.username+' : </a>'+
+                        '<span class="my-pl-con">&nbsp;'+ data.content +'</span>'+
+                        '</div><div class="date-dz">'+
+                        '<span class="date-dz-left pull-left comment-time">'+data.now_time+'</span>'+
+                        '</div></div></div></div>'
+                    $("#reply_user_all_"+id).prepend(oHtml)
+                }else{
+                    alert('System error, please submit later!')
+                }
+                $("#textarea_id_"+id).val('')
+            }
+        })
+    }
+
+
+    // Comments
+    function submit_textarea(){
+        var myDate = new Date();
+        
+        var year = myDate.getFullYear();
+        
+        var month = myDate.getMonth()+1;
+        
+        var date = myDate.getDate();
+        var h = myDate.getHours();       
+        var m = myDate.getMinutes();    
+        if(m<10) m = '0' + m;
+        var s=myDate.getSeconds();
+        if(s<10) s = '0' + s;
+        var now = year+'-'+month+"-"+date+" "+h+':'+m+":"+s;
+
+        var content = $("#textarea_id").val() // 
+        if(content.length==0){
+            alert('Comment content cannot be empty！')
+            return
+        }
+
+        $.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'new_comment',
+                'artwork_id':'{{ artwork.id }}',
+                'content':content,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                console.log(data)
+                if (data.code == 0) {
+                    oHtml = '<div class="comment-show-con clearfix">'+
+                                '<div class="comment-show-con-img pull-left">'+
+                                    '<img class="user_img" src="'+ data.img +'" alt="">'+
+                                '</div>'+ 
+                                '<div class="comment-show-con-list pull-left clearfix">'+
+                                    '<div class="pl-text clearfix">'+ 
+                                        '<a href="#" class="comment-size-name">'+data.username+' : </a>'+ 
+                                        '<span class="my-pl-con">&nbsp;'+ data.content +'</span>'+ 
+                                    '</div>'+ 
+                                '<div class="date-dz">'+
+                                    '<span class="date-dz-left pull-left comment-time">'+data.now_time+'</span> '+
+                                    '<span class="date-dz-pl pl-hf hf-con-block pull-left" style="padding-top:7px; margin-left:10px; color: blue;" onclick="reply('+ data.id +')">Reply</span>'+
+                                '<span style="padding-top:7px; margin-left:10px;">'+
+                                    '<input type="hidden" name="like_stytl_chat" id="like_stytl_chat_'+ data.id +'" value="0">'+
+                                    '<span id="like_stytl_'+ data.id +'" class="glyphicon glyphicon-heart font_size_18" onclick="fabulous_chat('+ data.id +')"></span>'+
+                                    '<span style="font-size: 18px;vertical-align: bottom;" id="fabulous_number_'+ data.id +'">'+ data.fabulous_num +'</span>'+
+                                '</span>'+
+                                '</div>'+
+                                '<div id="reply_user_all_'+ data.id +'">'+
+                                '<div class="hf-list-con" style="background-color:white;display: none;" id="reply_comment_'+ data.id +'">'+
+                                '<div class="reviewArea clearfix"><textarea id="textarea_id_'+ data.id +'" class="content comment-input" placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea><a href="javascript:;" class="plBtn" onclick="submit_reply('+ data.id +')">Comments</a></div>'+
+                                '</div>'+
+                            '</div>'+
+                            '</div>'
+                    $("#show_id").prepend(oHtml)
+                }else{
+                    alert('System error, please submit later!')
+                }
+            }
+        })
+    }
+</script>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+</style>
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="content_index" style="padding: 10px 10%">
+	<div><img src="{% static 'images/support_top.png' %}" style="width: 100%; margin: 20px 0px;"></div>
+	<div style="margin-bottom: 20px;display: inline-block; margin: 0px 5px;">
+		<p style="font-size: 18px; font-weight: bold;">"Fun" is a touchstone of contemporary art and plays a central role in the cultural landscape at home and abroad.</p>
+		<p style="font-size: 18px; font-weight: bold;">
+			In recent years, we have presented the best of modern and contemporary art to a growing audience, enriching their lives and creating a global platform for the art and artists of our time. Our program of exhibitions, commissions, projects, talks and events is unrivalled in its breadth, ambition and accessibility.
+		</p>
+		<p style="font-size: 18px; font-weight: bold;">
+			However, as a public art website and registered charity, we rely on the philanthropy of our family of donors to achieve our goals. Every user who shops on the site is a supporter, and 1% of every sale is donated to those in need, and we have an automatic opt-in donation on the payment page. So, your support, at any level, is invaluable to us and can make a significant contribution to "Fun" in many ways.
+		</p>
+
+	</div>
+	<div style="margin-bottom: 20px;display: inline-block;width: 100%; margin-top: 20px;">
+		
+		<div class="col-xs-4">
+			<img src="{% static 'images/support_left.png' %}" style="width: 100%; height: 300px">
+		</div>
+		<div class="col-xs-8">
+			<div style="margin: 0 20%; height: 300px;">
+				<div style="font-size: 24px; border-top: 2px solid #eee; border-bottom: 2px solid #eee; height: 240px; margin-top: 30px;">
+					<div onclick="shopping()">
+						<div style="margin:30px 0px;padding: 10% 30%;text-align: center;font-weight: bold;width: 90%;display: inline-block;">
+							Offer your love Shopping
+						</div>
+						<div style="width: 10%;display: inline-block;float: right;padding: 20% 0;font-size: 50px;">
+							<span class="glyphicon glyphicon-chevron-right" style="cursor:pointer;"></span>
+						</div>
+					</div>
+					<!-- <div style="margin:30px 0px;">
+						<img src="{% static 'images/support_us.png' %}" style="width: 100%; height: 180px;" onclick="shopping()">
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function shopping(){
+        window.location.href = '/index_shopping/'
+
+	}
+	function touch_submit(){
+		var touch_name = $("#touch_name_id").val()
+		var touch_email = $("#touch_email_id").val()
+		var touch_subject = $("#touch_subject_id").val()
+		var touch_message = $("#touch_message_id").val()
+		if(touch_name.length > 0 && touch_email.length > 0 && touch_subject.length > 0 && touch_message.length > 0){
+			$.ajax({
+	            url:'',
+	            type:'post',
+	            dataType:'json',
+	            data:{
+	                'touch_name': touch_name,
+	                'touch_email': touch_email,
+	                'touch_subject': touch_subject,
+	                'touch_message': touch_message,
+	                
+	            },
+	            success:function(data){
+	            	alert('Thank you for your suggestion!')
+	            }
+	        });
+			
+		}else{
+			alert('Please fill in all the information when submitting the proposal!')
+		}
+	}
+</script>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

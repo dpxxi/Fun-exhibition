@@ -1,0 +1,44 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+</style>
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="content_index" style="padding: 10px 10%">
+	<div>
+		<div class="font_size_32" style="cursor: pointer; font-weight: bold;"onclick="news_detail({{ news.id }})">
+			{{ news.title }}
+		</div>
+		<!-- <div class="font_size_24">
+			{{ news.describe }}
+		</div> -->
+		<div class="font_size_14" style="font-weight: bold;">
+			BY<span style="margin: 5px 20px; color: red;">{{ news.artist }}</span>{{ news.time }}
+		</div>
+	</div>
+	<div><img src="{{ news.img.url }}" style="width: 100%; margin: 20px 0px;"></div>
+	<div style="margin-bottom: 20px;display: inline-block;">
+		<div class="col-xs-12 font_size_18" style="width: 100%">
+			{% autoescape off %}
+                {{ news.content }}
+            {% endautoescape %}
+		</div>
+		<!-- <div class="col-xs-4" style="text-align: right;">
+			<img src="{% static 'images/fun_right.jpg' %}" style="width: 100%">
+		</div> -->
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

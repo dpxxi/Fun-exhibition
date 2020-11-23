@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<style type="text/css">
+
+</style>
+<body class="hold-transition login-page">
+    <div class="login-box" style="text-align:center; margin: 10% 40%; width: 300px;">
+        {% if errors %}
+        <div class="alert alert-danger alert-dismissible">
+            <h4><i class="icon fa fa-ban"></i> Errors!</h4>
+            {% for error in errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="login-box-body">
+            <p class="login-box-msg">管理员登录</p>
+
+            <form action="." method="post">
+                {% csrf_token %}
+                <div class="form-group has-feedback divphone">
+                    <input type="text" class="phone form-control" placeholder="邮箱号" name="name" value="{{ name }}" autocomplete="off" required>
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="密码" name="pwd" value="{{ pwd }}" autocomplete="off" required>
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <select id="dept_select" class="form-control" name="game_id" style="width: 100%;border-radius: 4px;border: 1px solid #ccc;margin: 2% 0%;padding: 0.5% 1%;">
+                            {% for game in games %}
+                                <option value="{{ game.game_id }}">{{ game.game_name }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

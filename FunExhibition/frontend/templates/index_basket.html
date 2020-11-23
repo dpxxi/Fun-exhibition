@@ -1,0 +1,327 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 20%; font-size: 22px;
+	}
+	footer{
+		background: #ccc;
+	    margin-top: 50px;
+	    width: 100%;
+	    bottom: 0;
+	}
+</style>
+<div id="content_index" style="padding: 0 10%;">
+	<div style="font-size: 25px;padding: 1% 2%; font-weight: bold;">Your basker</div>
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;margin-top: 20px;">
+		<div class="col-xs-6">
+			<div style="border: 1px solid #ccc;padding: 1% 0;display: inline-block;margin-bottom: 5%; min-height: 200px; min-width: 300px;">
+				{% for i in shoppingCart %}
+				<div style="width: 100%;display: inline-block;" class="data_car">
+					<div class="col-xs-4">
+						<img src="{{ i.shoppingCart_commodity.img.url }}" style="width: 100%">
+					</div>
+					<div class="col-xs-8">
+						<div style="font-size: 20px;padding: 20px 0">
+							<span>{{ i.shoppingCart_commodity.describe }}</span>
+						</div>
+						<div style="font-size: 20px;padding: 20px 0">
+							<span>£{{ i.shoppingCart_commodity.money }}</span>
+						</div>
+						<div>
+							<button style="width: 30px;height: 30px;background: #ccc;border: none;" class="jian_shop" data_id='{{ i.id }}'>-</button>
+							<input type="text" name="" value="{{ i.shopping_num }}" style="border: none;outline: none;height: 30px;width: 30px">
+							<button style="width: 30px;height: 30px;background: #ccc;border: none;" class="add_shop" data_id='{{ i.id }}'>+</button>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+
+			<div style="font-size: 17px;cursor: pointer;" onclick="shopping()"><span> < Continue shopping</span></div>
+		</div>
+
+		<div class="col-xs-6">
+			<div style="margin: 0 10%">
+				<div style="padding: 10px 10px;background: #ccc;font-size: 20px">Your order</div>
+				<div style="padding: 10px 10px;font-size: 15px">
+					<span style="font-weight: 600;">Order subtotal</span>£
+					<span class="num_all" style="float: right;">{{ money_all }}</span>
+				</div>
+				<div style="padding: 10px 10px;background: #fd3f3f;font-size: 20px;color: #fff">Donation to Art charity</div>
+				<div style="border: 1px solid #fd3f3f;padding: 10px 10px;">
+					<p style="font-weight: 600;">Would you like to make a donation?</p>
+					<select style="width: 100%;height: 30px" class="juankuan" disabled>
+						<option value="0">0</option>
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="20">20</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+					</select>
+					<div style="padding: 0 10px;margin: 5px 0"><input checked type="checkbox" name="" id="" style="vertical-align: top;" class="checkbox_input"> <span>Opt out if you do not wish to donate</span></div>
+					<div>
+						Your donation will help the Art UK chartity show more of the nation's art online.
+					</div>
+					<div>
+						 <a href="/index_support_us/" style="font-weight: bold;">Why donate.</a>
+					</div>
+				</div>
+				<div style="padding: 10px 0">
+					<select style="width: 100%;height: 30px" class="apply">
+						<option value="">Please select</option>
+						<option value="1">Apply discount/coucher code</option>
+					</select>
+					<div style="width: 100%;margin-top: 10px;position: relative;display: none;" class="div_code">
+						<input type="text" name="" placeholder="Enter Code" class="code code_wenzi" style="width: 100%;outline: none;height: 30px">
+						<button style="position: absolute;right: 0;height: 30px;border: none;outline: none;background: #7b7a7a;color: #fff;padding: 0 25px;cursor: pointer;" class="apply_wenzi">Apply</button>
+					</div>
+					<select style="width: 95%;height: 30px;margin: 20px 0;" class="address">
+						<option value="">Please select address</option>
+						{% for i in address %}
+						<option value="{{ i.id }}">{{i.country}}-{{ i.city }}-{{ i.address_info }}</option>
+						{% endfor %}
+					</select>
+					<span class="glyphicon-plus glyphicon" style="cursor: pointer;" data-toggle="modal" data-target="#myModaladdress"></span>
+
+					<div style="font-size: 25px;padding: 15px 0">
+						<span style="padding: 0 20%;">Order total:</span>
+						<span>£<span class="zong_monery">{{ money_all }}</span></span>
+					</div>
+					<button style="width: 100%;padding: 10px 10px;color: #fff;background: #fd3f3f;border: none;outline: none;font-size: 20px;" id="checkout">checkout</button>
+					<div style="text-align: center;">
+						<img src="{% static 'images/apply.png' %}" style="width: 80%">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- （Modal） -->
+<div class="modal fade" id="myModaladdress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div style="margin-bottom: 20px">
+                    <div>COUNTRY</div>
+                    <input type="text" name="country" id="gw_country_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>CITY</div>
+                    <input type="text" name="city" id="gw_city_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>Detailed address</div>
+                    <textarea style="width: 250px" id="gw_address_info"></textarea>
+                </div>
+
+                <button id="submit_address" style="border: none;background: #ff2a2a;color: #fff;padding: 1% 5%;outline: none;border-radius: 22px;">Create address</button>
+            </div>    
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+	function shopping(){
+        window.location.href = '/index_shopping/'
+
+	}
+
+	$('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+
+	$('.add_shop').click(function(){
+		var shoppingCart_id = $(this).attr('data_id')
+		var num = $(this).prev().val()
+		var os_num = $(this).prev()
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'add_num',
+                'shoppingCart_id':shoppingCart_id,
+                'num':num,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+            	console.log(data)
+                if (data.code == 0) {
+                	os_num.val(data.num)
+                	$('.num_all').text(data.money_all)
+                	var result = parseFloat(data.money_all) + parseFloat($('.juankuan').val())
+                	$('.zong_monery').text(result)
+                }else{
+                	alert(data.err)
+                }
+            }
+        })
+	})
+
+	$('.jian_shop').click(function(){
+		var shoppingCart_id = $(this).attr('data_id')
+		var num = $(this).next().val()
+		var os_num = $(this).next()
+		var data_car = $(this).parents('.data_car')
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'jian_num',
+                'shoppingCart_id':shoppingCart_id,
+                'num':num,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+            	console.log(data)
+                if (data.code == 0) {
+                	if (data.num == 0) {
+						data_car.remove()
+						$('.num_all').text(data.money_all)
+	                	var result = parseFloat(data.money_all) - parseFloat($('.juankuan').val())
+	                	$('.zong_monery').text(result)
+                	}else{
+                		os_num.val(data.num)
+	                	$('.num_all').text(data.money_all)
+	                	var result = parseFloat(data.money_all) - parseFloat($('.juankuan').val())
+	                	$('.zong_monery').text(result)
+                	}
+                	
+                }else{
+                	// data_car.remove()
+                }
+            }
+        })
+	})
+
+	$('#submit_address').click(function(){
+		var gw_country_id = $('#gw_country_id').val()
+		var gw_city_id = $('#gw_city_id').val()
+		var gw_address_info = $('#gw_address_info').val()
+
+		if (gw_country_id == '' || gw_country_id == null) {
+			alert('Please fill in the country')
+			return false
+		}
+
+		if (gw_city_id == '' || gw_city_id == null) {
+			alert('Please fill in the city')
+			return false
+		}
+
+		if (gw_address_info == '' || gw_address_info == null) {
+			alert('Please fill in the detailed address')
+			return false
+		}
+
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'add_address',
+                'gw_country_id':gw_country_id,
+                'gw_city_id':gw_city_id,
+                'gw_address_info':gw_address_info,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                location.reload()
+            }
+        })
+
+	})
+
+	$('.juankuan').change(function(){
+		var value = $(this).val()
+		var zong = $('.num_all').text()
+
+		console.log(value)
+		console.log(zong)
+
+		var result = parseFloat(zong) + parseFloat(value)
+
+		
+		$('.zong_monery').text(result)
+
+		
+	})
+
+	$('#checkout').click(function(){
+		var address = $('.address option:selected').val()
+
+		if ($('.data_car').length == 0) {
+			alert('You have not added items to the shopping cart. Please add items')
+			return false
+		}
+
+		if (address == '' || address == null) {
+			alert('Please fill in your address first.')
+			return false
+		}
+
+		$.ajax({
+            url:'',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'checkout',
+                'address':address,
+                'zong_monery':$('.zong_monery').text(),
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                if (data.code == 0) {
+                	location.reload()
+                }
+            }
+        })
+	})
+
+	$('.checkbox_input').click(function(){
+		if ($(this).is(':checked') == true) {
+			$('.juankuan').attr("disabled","disabled")
+			all = parseFloat($('.zong_monery').text()) - parseFloat($('.juankuan').val())
+			$('.zong_monery').text(all)
+		}else{
+			$('.juankuan').removeAttr("disabled");
+			all = parseFloat($('.zong_monery').text()) + parseFloat($('.juankuan').val())
+			$('.zong_monery').text(all)
+		}
+	})
+
+	$('.apply').change(function(){
+		console.log($(this).val())
+		if ($(this).val() == '1') {
+			$('.div_code').show()
+		}else{
+			$('.div_code').hide()
+		}
+	})
+
+	$('.apply_wenzi').click(function(){
+		if ($('.code_wenzi').val().length == 0) {
+			alert('Please Enter code')
+			return false
+		}
+		alert('apply')
+	})
+
+</script>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

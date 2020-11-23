@@ -1,0 +1,98 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+	.padding_class{
+		padding: 0 10%;
+		text-align: center;
+		margin-bottom: 30px;
+	}
+	.padding_class1{
+		padding: 5px 0;
+		margin:5px 0;
+	}
+</style>
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="content_index" style="padding: 10px 10%">
+	<div style="margin-bottom: 100px;position: relative;">
+		<div style="font-size: 25px;text-indent:50px;">
+			Art constitutes the paradise of human life; its beauty, its grace, its sublimity, is a miracle in the universe. There may be higher beings in the universe, but there is no higher art.
+The inability to appreciate art deprives us of the blissful moments of appreciating the greatest creations of mankind and makes us feel alienated from the civilization in which we live.
+Welcome to enjoy the following video with our team, "Fun" website provides you with the latest news about art education.
+
+		</div>
+		<video src="{% static 'images/WeChat_20201029221634.mp4' %}" style="width: 100%" controls="controls"></video>
+		
+	</div>
+
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;">
+		{% for education in education_list %}
+		<div class="col-xs-6 padding_class" style="text-align: center; max-height: 400px; padding: 0 50px 0 50px;">
+			<img src="{{ education.img.url}}" style="width: 100%;">
+			<div class="padding_class1 font_size_24" class="border_radius_class" style="text-align: center;">
+				<span style="cursor:pointer;" onclick="submit_education({{ education.id }})">{{ education.title }}</span>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+
+	<!-- <div style="display: inline-block;padding: 0 40px">
+		<div class="row">
+			{% for education in education_list %}
+			<div class="col-xs-6 padding_class" style="margin-bottom: 50px; width: 100%">
+				<img src="{{ education.img.url}}" style="width: 100%;">
+				<div class="padding_class1 font_size_25">
+					<span style="cursor:pointer;" onclick="submit_education({{ education.id }})">{{ education.title }}</span>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+
+		<div class="col-xs-6" style="margin-bottom: 50px">
+			<img src="{% static 'images/2.jpg' %}" style="width: 100%">
+			<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			<div style="font-size: 16px;">The asymptomatic individual worked in a hotel in Huadu District of Guangzhou, where overseas arrivals undergo concentrated quarantine, should be treated as a close contact of an imported COVID-19 case in the city.</div>
+		</div>
+		<div class="col-xs-6" style="margin-bottom: 50px">
+			<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+			<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			<div style="font-size: 16px;">The asymptomatic individual worked in a hotel in Huadu District of Guangzhou, where overseas arrivals undergo concentrated quarantine, should be treated as a close contact of an imported COVID-19 case in the city.</div>
+		</div>
+		<div class="col-xs-6" style="margin-bottom: 50px">
+			<img src="{% static 'images/2.jpg' %}" style="width: 100%">
+			<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			<div style="font-size: 16px;">The asymptomatic individual worked in a hotel in Huadu District of Guangzhou, where overseas arrivals undergo concentrated quarantine, should be treated as a close contact of an imported COVID-19 case in the city.</div>
+		</div>
+		<div class="col-xs-6" style="margin-bottom: 50px">
+			<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+			<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			<div style="font-size: 16px;">The asymptomatic individual worked in a hotel in Huadu District of Guangzhou, where overseas arrivals undergo concentrated quarantine, should be treated as a close contact of an imported COVID-19 case in the city.</div>
+		</div>
+		<div class="col-xs-6" style="margin-bottom: 50px">
+			<img src="{% static 'images/2.jpg' %}" style="width: 100%">
+			<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			<div style="font-size: 16px;">The asymptomatic individual worked in a hotel in Huadu District of Guangzhou, where overseas arrivals undergo concentrated quarantine, should be treated as a close contact of an imported COVID-19 case in the city.</div>
+		</div>
+	</div> -->
+</div>
+
+<script type="text/javascript">
+	function submit_education(id){
+		window.location.href = '/index_education_detail/' + id +'/'
+	}
+</script>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,32 @@
+  .img-cont{
+    height:100px;
+    border:2px solid #4caf50;
+    background-color: #4caf50;
+  }
+
+  .img-cont>div{
+    width:30px;
+    height:46px;
+    float:left;
+    margin:2px 0 0 2px;
+  }
+
+  .img-cont>div>div{
+    width:30px;
+    height:30px;
+  }
+
+  .img-cont>div>a{
+    width:30px;
+    border-radius:4px;
+    text-align: center;
+    color:#fff;
+    display: block;
+    background: red;
+    margin:5px 0 0 0px;
+    cursor: pointer;
+  }
+
+ /* .hide{
+    display: none !important;
+  }*/

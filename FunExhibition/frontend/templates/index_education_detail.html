@@ -1,0 +1,37 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+</style>
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="content_index" style="padding: 0 10%;">
+	<div style="text-align: center;">
+		<span style="font-size: 52px; font-weight: bold">{{ education.title }}</span>
+	</div>
+	<div><img src="{{ education.img.url }}" style="width: 100%; margin: 20px 0px;"></div>
+	<div style="padding: 0 50px;margin-bottom: 20px;display: inline-block; margin: 0px 5px;">
+		<div  class="font_size_14">
+			&nbsp;&nbsp;&nbsp;&nbsp;
+            {% autoescape off %}
+                {{ education.content }}
+            {% endautoescape %}
+		</div>
+		<!-- <div class="col-xs-4" style="text-align: right;">
+			<img src="{% static 'images/fun_right.jpg' %}" style="width: 100%">
+		</div> -->
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

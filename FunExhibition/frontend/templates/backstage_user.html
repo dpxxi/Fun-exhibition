@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer"/>
+<style type="text/css">
+    .span_green{
+        color: green; 
+    }
+    .span_red{
+        color: red; 
+    }
+    .text_center{
+        text-align: center;
+    }
+    .select_class{
+        width: 150px;
+        height: calc(2rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        box-shadow: inset 0 0 0 transparent;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    .card-body{
+        padding: 0px !important;
+        padding-left: 10px !important;
+    }
+    table th{
+        white-space: nowrap;
+    }
+    table td{
+        white-space: nowrap;
+    }
+    .span_class{
+        border: 1px solid #000;
+        width: 120px;
+        height: 30px;
+        display: block;
+        text-align: center;
+        line-height: 30px;
+        float: left;
+        margin: 10px;
+        cursor: pointer;
+    }
+    .layui-laydate-range {
+        width: 300px !important;
+    }
+    .form_div{
+        margin-top: 10px;
+    }
+</style>
+
+<div>
+    <div>
+        <div style="float: left;">
+            <form action="" method="post" class="form-inline" enctype="multipart/form-data" autocomplete="off">
+                name:<input type="text" class="select_class" name="q" value="{{ q }}" placeholder="name/email" style="margin-left: 10px;">
+                <input type="hidden" name="action" value="select_action">
+                <button class="btn btn-success btn-sm" style="margin-left: 10px;">submit</button>
+            </form>
+        </div>
+        <div style="float: left;">
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add_user" style="margin-left: 10px;">Add User</button>
+        </div>
+        
+        <div class="modal" id="add_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top: 10%">
+            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Add User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form_div row">
+                            <div class="col-2">
+                                name:
+                            </div>
+                            <div class="col-10">
+                                <input type="text" name="name" class="select_class" style="width: 15%;min-width: 240px;" required>
+                            </div>
+                            
+                        </div>
+                        <div class="form_div row">
+                            <div class="col-2">
+                                phone:
+                            </div>
+                            <div class="col-10">
+                                <input type="text" name="phone" class="select_class" style="width: 15%;min-width: 240px;" required>
+                            </div>
+                        </div>
+                        <div class="form_div row">
+                            <div class="col-2">
+                                email:
+                            </div>
+                            <div class="col-10">
+                                <input type="text" name="email" class="select_class" style="width: 15%;min-width: 240px;" required>
+                            </div>
+                        </div>
+                        <div class="form_div row">
+                            <div class="col-2">
+                                money:
+                            </div>
+                            <div class="col-10">
+                                <input type="text" name="money" class="select_class" style="width: 15%;min-width: 240px;" required>
+                            </div>
+                        </div>
+                        <div class="form_div row">
+                            <div class="col-2">
+                                status:
+                            </div>
+                            <div class="col-10">
+                                <select name="status"  class="select_class" style="width: 15%;min-width: 240px;" required>
+                                    <option value="0" {% if user.status == 0 %} selected {% endif %}>Normal</option>
+                                    <option value="-1" {% if user.status == -1 %} selected {% endif %}>Disable</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form_div row">
+                            <div class="col-2">
+                                admin:
+                            </div>
+                            <div class="col-10">
+                                <select name="admin_level" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                    <option value="1" {% if user.admin_level == 1 %} selected {% endif %}>Yes</option>
+                                    <option value="0" {% if user.admin_level == 0 %} selected {% endif %}>No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="height:60px;">
+                        <input type="hidden" name="action" value="add_user">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>
+    </div>
+    <div style="clear:both">
+        <table class="table table-bordered" style="margin-top: 10px;">
+            <tbody>
+                <tr>
+                    <td>name</td>
+                    <td>phone</td>
+                    <td>email</td>
+                    <td>money</td>
+                    <td>status</td>
+                    <td>admin</td>
+                    <td>operation</td>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.money }}</td>
+                    {% if user.status == 0 %}
+                        <td style="color: green">Normal</td>
+                    {% else %}
+                        <td style="color: red">Disable</td>
+                    {% endif %}
+                    {% if user.admin_level == 1 %}
+                        <td>yes</td>
+                    {% else %}
+                        <td>no</td>
+                    {% endif %}
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modifyupdate_{{ user.id }}">Modify</button>
+                        <div class="modal" id="modifyupdate_{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top: 10%">
+                            <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">User information modification</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                name:
+                                            </div>
+                                            <div class="col-10">
+                                                <input type="text" name="name" value="{{ user.name }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                phone:
+                                            </div>
+                                            <div class="col-10">
+                                                <input type="text" name="phone" value="{{ user.phone }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                            </div>
+                                        </div>
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                email:
+                                            </div>
+                                            <div class="col-10">
+                                                <input type="text" name="email" value="{{ user.email }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                            </div>
+                                        </div>
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                money:
+                                            </div>
+                                            <div class="col-10">
+                                                <input type="text" name="money" value="{{ user.money }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                            </div>
+                                        </div>
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                status:
+                                            </div>
+                                            <div class="col-10">
+                                                <select name="status"  value="{{ user.status }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                                    <option value="0" {% if user.status == 0 %} selected {% endif %}>Normal</option>
+                                                    <option value="-1" {% if user.status == -1 %} selected {% endif %}>Disable</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form_div row">
+                                            <div class="col-2">
+                                                admin:
+                                            </div>
+                                            <div class="col-10">
+                                                <select name="admin_level"  value="{{ user.admin_level }}" class="select_class" style="width: 15%;min-width: 240px;" required>
+                                                    <option value="1" {% if user.admin_level == 1 %} selected {% endif %}>Yes</option>
+                                                    <option value="0" {% if user.admin_level == 0 %} selected {% endif %}>No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer" style="height:60px;">
+                                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                                        <input type="hidden" name="action" value="update_user">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                          </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+
+    <div class="modal fade" id="add_classify" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="" method="post">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">
+                            add user
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form_div">
+                            account:<input type="text" name="name" class="select_class" style="width: 15%;min-width: 150px;" required>
+                        </div>
+                        <div class="form_div">
+                            name:<input type="text" name="user_name" class="select_class" style="width: 15%;min-width: 150px;" required>
+                        </div>
+                        <div class="form_div">
+                            phone:<input type="text" name="phone" class="select_class" style="width: 15%;min-width: 150px;" required>
+                        </div>
+                        <div class="form_div">
+                            email:<input type="text" name="email" class="select_class" style="width: 15%;min-width: 150px;">
+                        </div>
+                        <div class="form_div">
+                            wechat:<input type="text" name="wx_wechat" class="select_class" style="width: 15%;min-width: 150px;">
+                        </div>
+                        <div class="form_div">
+                            code:<input type="text" name="pwd" class="select_class" style="width: 15%;min-width: 150px;" required>
+                        </div>
+                        <div class="form_div">
+                            status:<select name="status" class="select_class" style="width: 15%;min-width: 150px;" required>
+                                    <option value="0">normal</option>
+                                    <option value="-1">cannot use</option>
+                                </select>
+                        </div>
+                        <div class="form_div">
+                            平台:<select name="platform_id" class="select_class" style="width: 15%;min-width: 150px;">
+                                    {% for platform in platforms %}
+                                        <option value="{{ platform.id }}">{{ platform.name }}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <div class="form_div">
+                            用户等级<select name="admin_level" class="select_class" style="width: 15%;min-width: 150px;">
+                                <option value="0">user</option>
+                                <option value="1">admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="action" value="add_user">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            save
+                        </button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+
+{% endblock %}

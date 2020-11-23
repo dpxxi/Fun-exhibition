@@ -1,0 +1,64 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 20%; font-size: 22px;
+	}
+</style>
+<div id="content_index" style="padding: 0 10%;">
+	<div style="margin-bottom: 20px">
+		<img src="{% static 'images/shopping_top.png' %}" style="width: 100%">
+	</div>
+	
+	<div style="margin-bottom: 50px">
+		<span style="font-size: 25px;font-weight: bold;padding-left: 20px">Welcome to the love Store</span>
+	</div>
+
+	<div style="padding: 10px 50px;margin-bottom: 20px;display: inline-block;width: 100%;">
+		{% for commoditi in commodities %}
+		<div class="col-xs-3" style="height: 400px;" onclick="commodi_submit({{ commoditi.id }})">
+			<img src="{{commoditi.img.url }}" style="width: 100%">
+			<div style="font-size: 20px;font-weight: bold;text-align: center; cursor:pointer;">{{ commoditi.title }}</div>
+			<div style="font-size: 18px; text-align: center;">£{{ commoditi.money }}</div>
+		</div>
+		{% endfor %}
+		<!-- <div class="col-xs-3">
+			<img src="{% static 'images/recent1.jpg' %}" style="width: 100%">
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">title</div>
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">price</div>
+			
+		</div>
+		<div class="col-xs-3">
+			<img src="{% static 'images/recent1.jpg' %}" style="width: 100%">
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">title</div>
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">price</div>
+		</div>
+		<div class="col-xs-3">
+			<img src="{% static 'images/recent1.jpg' %}" style="width: 100%">
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">title</div>
+			<div style="font-size: 20px;font-weight: bold;text-align: center;">price</div>
+		</div> -->
+	</div>
+</div>
+<script type="text/javascript">
+	function commodi_submit(id){
+		window.location.href = '/index_shopping_detail/' + id +'/'
+	}
+	
+	$('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+</script>
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 0%; font-size: 22px;
+	}
+</style>
+<link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div id="content_index" style="padding: 0 10%;">
+	<div style="padding-left: 40%;padding-top: 1%">
+		<form action="" method="post" enctype="multipart/form-data">
+			<div style="margin-bottom: 20px;padding-left: 70px;">
+				<img src="{{ user.image.url }}" style="width: 100px;height: 100px;border-radius: 50%" class="head_img">
+				<div style="margin-top: 10px">
+					<input type="file" name="head" style="display: none" class="upload_head" onchange="image_change(this)">
+					<input type="button" name="" value="upload" class="upload_img" style="margin-left: 2%;">
+				</div>
+			</div>
+			<div style="margin-bottom: 20px">
+				<div>USERNAME</div>
+				<input type="text" name="username" value="{{ user.public_name }}" style="width: 250px;height: 25px">
+			</div>
+
+			<div style="margin-bottom: 20px">
+				<div>E-MAIL-ADDRESS</div>
+				<input type="text" name="email" value="{{ user.email }}" style="width: 250px;height: 25px">
+			</div>
+
+			<div style="margin-bottom: 20px">
+				<div>CITY</span></div>
+				<input type="text" name="country" value="{{ user.country }}" style="width: 250px;height: 25px">
+			</div>
+
+			<div style="margin-bottom: 20px">
+				<div>ADDRESS(STREET/RESLDENCE)</div>
+				<input type="text" name="city" value="{{ user.city }}" style="width: 250px;height: 25px">
+			</div>
+
+			<div style="margin-bottom: 20px">
+				<div>MONEY</div>
+				<input type="text" name="money" value="{{ user.money }}" style="width: 250px;height: 25px" readonly>
+			</div>
+			<input type="hidden" name="action" value="edit_user">
+			<button type="submit" style="border: none;background: #0c73f3;color: #fff;padding: 1% 5%;outline: none;cursor: pointer;">submit</button>
+		</form>
+	</div>
+
+	<div style="display: inline-block;padding: 0 40px">
+		<div style="padding-left: 15px">
+			<h3>Browse history</h3>
+		</div>
+		<div style="min-height: 40px;">
+			{% for i in browses %}
+				<div class="col-xs-2" style="margin-bottom: 50px" onclick="window.location.href='/index_exhibition_detail/{{ i.id }}/'">
+					
+					<img src="/media/{{ i.img }}" style="width: 100%">
+					<div style="margin: 3% 0;font-size: 13px;font-weight: bold;">{{ i.title }}</div>
+				</div>
+			{% endfor %}
+			<!-- <div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div>
+			<div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div>
+			<div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div>
+			<div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div>
+			<div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div>
+			<div class="col-xs-2" style="margin-bottom: 50px">
+				<img src="{% static 'images/4.jpg' %}" style="width: 100%">
+				<div style="margin: 3% 0;font-size: 25px;font-weight: bold;">title</div>
+			</div> -->
+		</div>
+	</div>
+
+	<div style="display: inline-block;padding: 0 40px;width: 100%">
+		<div style="padding-left: 15px">
+			<h3>Order history</h3>
+		</div>
+		{% for order in orders %}
+		<table style="width: 100%;border: 1px solid #ccc;margin-bottom: 20px">
+			<tr>
+				<td colspan="3" style="padding: 10px 20px;">
+					<span>{{ order.create_time }}</span>
+					<span>订单号：<span>{{ order.order_num }}</span></span>
+					<span>总金额:{{ order.order_money }}</span>
+				</td>
+			</tr>
+
+			{% for shopping in order.get_shopping %}
+			<tr>
+				<td style="padding: 10px 20px;">
+					<div>
+						<img src="{{ shopping.shoppingCart_commodity.img.url }}" style="width: 50px;height: 50px">
+						<span>{{ shopping.shoppingCart_commodity.title }}</span>
+						<span style="margin-left: 20px;">{{ shopping.order_num }}</span>
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+
+		</table>
+		{% endfor%}
+
+		<!-- <table style="width: 100%;border: 1px solid #ccc;margin-bottom: 20px">
+			<tr>
+				<td colspan="3" style="padding: 10px 20px;">
+					<span>2017-07-31</span>
+					<span>订单号：123788478015</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 10px 20px;">
+					<div>
+						<img src="{% static 'images/4.jpg' %}" style="width: 50px;height: 50px">
+						<span>网易严选 网易智造 轻薄无线充电器 苹果安卓手机QI快充iPhone11ProMax/X/XsMax/XR/小</span>
+						<span style="margin-left: 20px;">X1</span>
+					</div>
+				</td>
+				<td>user</td>
+				<td>money</td>
+			</tr>
+			<tr>
+				<td style="padding: 10px 20px;">
+					<div>
+						<img src="{% static 'images/4.jpg' %}" style="width: 50px;height: 50px">
+						<span>网易严选 网易智造 轻薄无线充电器 苹果安卓手机QI快充iPhone11ProMax/X/XsMax/XR/小</span>
+						<span style="margin-left: 20px;">X1</span>
+					</div>
+				</td>
+				<td>user</td>
+				<td>money</td>
+			</tr>
+		</table>
+		<table style="width: 100%;border: 1px solid #ccc;margin-bottom: 20px">
+			<tr>
+				<td colspan="3" style="padding: 10px 20px;">
+					<span>2017-07-31</span>
+					<span>订单号：123788478015</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding: 10px 20px;">
+					<div>
+						<img src="{% static 'images/4.jpg' %}" style="width: 50px;height: 50px">
+						<span>网易严选 网易智造 轻薄无线充电器 苹果安卓手机QI快充iPhone11ProMax/X/XsMax/XR/小</span>
+						<span style="margin-left: 20px;">X1</span>
+					</div>
+				</td>
+				<td>user</td>
+				<td>money</td>
+			</tr>
+			<tr>
+				<td style="padding: 10px 20px;">
+					<div>
+						<img src="{% static 'images/4.jpg' %}" style="width: 50px;height: 50px">
+						<span>网易严选 网易智造 轻薄无线充电器 苹果安卓手机QI快充iPhone11ProMax/X/XsMax/XR/小</span>
+						<span style="margin-left: 20px;">X1</span>
+					</div>
+				</td>
+				<td>user</td>
+				<td>money</td>
+			</tr>
+		</table> -->
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('.upload_img').click(function(){
+		$('.upload_head').click();
+	})
+
+	function image_change(obj){
+		file=obj;
+		var fileUrl = $(obj).val();
+		console.log(fileUrl)
+		var name = fileUrl.split('\\')[fileUrl.split('\\').length - 1]
+		if (!file.files||!file.files[0]) { return; }
+		var reader = new FileReader();
+		reader.readAsDataURL(file.files[0]);
+		reader.onload = function(evt) {
+			$('.head_img').attr('src', evt.target.result)
+			
+			// $(obj).attr('path', name)
+			// $(obj).parents('.image_div').find('.look_img').prepend('<img onclick="del_img(this)" style="width:50px" class="img_show" path="'+name+'" src="'+evt.target.result+'">')
+			// $(obj).parents('.image_div').find('.look_img').append('<input type="file" onchange="image_change(this)" name="image" class="image" style="display: none;">')
+		}
+	}
+</script>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

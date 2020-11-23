@@ -1,0 +1,25 @@
+{% load static %}
+<footer style="background: #ccc;margin-top: 50px;min-width: 1266px;display: inline-block;width: 100%">
+	<div style="width: 100%;display: inline-block;">
+        <div style="padding: 0px 10%;">
+            <span onclick="fun_skip('/index_home')" style="cursor:pointer;">
+                <img src="{% static 'images/logo.png' %}" style="width: 30px;vertical-align: bottom;margin-right: 15px">
+                <span class="font_size_24" style="font-weight: bold;">FUN</span>
+            </span>
+            <ul style="display: inline-block;height: 59px;vertical-align: bottom;font-size: 15px;padding-top: 40px;font-weight: bold; padding-left: 0px;">
+                <li class="li_class" style="text-align: center;" onclick="fun_skip('/index_support_us')">Support Us</li>
+                <li class="li_class" style="text-align: center;" onclick="fun_skip('/index_exhibition')">Exhibition</li>
+                <li class="li_class" style="text-align: center;" onclick="fun_skip('/index_news')">News</li>
+                <li class="li_class" style="text-align: center;" onclick="fun_skip('/index_education')"onclick="fun_skip('/index_education')">Education</li>
+            </ul>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <ul style="display: inline-block;height: 59px;vertical-align: bottom;font-size: 15px;font-weight: bold;">
+                <li class="li_class" style="text-align: center;width: 60px"><img src="{% static 'images/foot1.png' %}" style="width: 30px"></li>
+                <li class="li_class" style="text-align: center;width: 60px"><img src="{% static 'images/foot2.png' %}" style="width: 30px"></li>
+                <li class="li_class" style="text-align: center;width: 60px"><img src="{% static 'images/foot3.png' %}" style="width: 30px"></li>
+                <li class="li_class" style="text-align: center;width: 60px"><img src="{% static 'images/foot4.png' %}" style="width: 30px"></li>
+            </ul>
+        </div>
+    </div>
+</footer>

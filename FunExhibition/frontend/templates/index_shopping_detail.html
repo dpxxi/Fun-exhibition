@@ -1,0 +1,144 @@
+{% extends 'index_base.html' %}
+
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+	.li_stytl_class{
+		margin: 5px 0 5px 20%; font-size: 22px;
+	}
+/*	footer{
+		background: #ccc;
+	    margin-top: 50px;
+	    position: fixed;
+	    width: 100%;
+	    bottom: 0;
+	}*/
+</style>
+<div id="content_index" style="height: auto; padding: 0 10%;">
+	<div style="padding: 50px 50px;margin-bottom: 20px;display: inline-block;width: 100%;margin-top: 20px;border-bottom: 1px solid">
+		<div class="col-xs-4">
+			<img src="{{ commodity.img.url }}" style="width: 100%">
+		</div>
+		<div class="col-xs-8" style="padding: 0 5%;">
+			<div style="font-size: 30px;margin-bottom: 10px">
+				<span>{{ commodity.title }}</span>
+			</div>
+			<!-- <div style="color: #ccc;font-size: 16px">
+				{{ commodity.describe }}
+			</div> -->
+			<div style="font-size: 20px;padding: 20px 0">
+				<span>£{{ commodity.money }}</span>
+			</div>
+			<div style="padding-bottom: 20px">
+				<span>Quantity</span><input type="number" name="" min="1" value="1" class="num" style="width: 65px;margin-left: 5px;height: 30px;border: 1px solid #ccc;outline: none;">
+			</div>
+			<div>
+				{% if user %}
+				<button style="color: #fff;background: #ef2424;border: none;outline: none;padding: 10px 25px;" id="add_gouwuche">Add to Cart</button>
+				{% else %}
+				<button style="color: #fff;background: #ef2424;border: none;outline: none;padding: 10px 25px;" data-toggle="modal" data-target="#myModal">Add to Cart</button>
+				{% endif %}
+			</div>
+		</div>
+		
+	</div>
+	<div style="display: inline-block;width: 100%">
+		<span style="font-size: 20px">Description</span>
+		<span class="glyphicon glyphicon-chevron-up jiantou" style="float: right;font-size: 20px;cursor: pointer;"></span>
+		<div class="detail" style="padding: 5px 5px;font-size: 16px;height: 600px">
+			<div>
+				{% autoescape off %}
+				{{ commodity.description }}
+				{% endautoescape %}
+			</div>
+
+			<div>
+				{% autoescape off %}
+				{{ commodity.detail }}
+				{% endautoescape %}
+			</div>
+		</div>
+	</div>
+	 <div class="modal fade" id="shopping_modal_id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/index_basket/" method="post">
+                	<div class="modal-header" style="border-bottom: 0px;padding-bottom: 0;">
+		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="font-size: 50px;padding:10px;font-weight: normal;outline: none">
+		                    &times;
+		                </button>
+		            </div>
+                	{% csrf_token %}
+                    <div style="height: 140px;font-weight: bold; font-size: 26px;padding: 0 30px;">
+                        Item added to your basket
+                    </div>
+                    <div style="padding: 10px 30px 60px 30px">
+                        <input type="hidden" name="action" value="add_user">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" style="width: 49%; background-color: #000; color: #fff; height: 50px;" onclick="submit_shopping()">
+                        	Continue Shopping
+                        </button>
+                        <button type="submit" class="btn btn-primary" style="width: 49%; background-color: red;height: 50px;">
+                            Go To Basket
+                        </button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+	console.log($('footer')[0])
+
+	$('#dropdownMenu1').click(function(){
+
+        if ($('.dropdown').hasClass('open')) {
+            $('.dropdown').removeClass('open')
+        }else{
+            $('.dropdown').addClass('open')
+        }
+    })
+
+    function submit_shopping(){
+    	window.location.href = '/index_shopping/'
+    }
+    
+	$(document).ready(function(){
+		$('#add_gouwuche').click(function(){
+			$.ajax({
+	            url:'',
+	            type:'post',
+	            dataType:'json',
+	            data:{
+	                'action':'add',
+	                'commodity_id':'{{ commodity.id }}',
+	                'num':$('.num').val(),
+	                'csrfmiddlewaretoken':'{{ csrf_token }}'
+	            },
+	            success:function(data){
+
+	                if (data.code == 0) {
+	                	$("#shopping_modal_id").modal('show')
+	                	// window.location.href = '/index_basket/'
+	                }else{
+	                	alert(data.err)
+	                }
+	            }
+	        })
+		})
+	})
+
+	$('.jiantou').click(function(){
+		 $(".detail").slideToggle("slow");
+	})
+	
+</script>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

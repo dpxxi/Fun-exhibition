@@ -1,0 +1,494 @@
+<!--The navigation bar-->
+{% load static %}
+<style type="text/css">
+    /*li{
+        list-style: none;
+        float: left;
+    }
+    ul li{
+        width: 150px;
+        text-align: right;
+    }*/
+    .li_class{
+        list-style: none;
+        float: left;
+        width: 130px;
+        text-align: center;
+        cursor:pointer;
+    }
+    .border_radius_class{
+        border-radius: 10px;
+    }
+    .font_size_24{
+        font-size: 24px;
+    }
+    .font_size_25{
+        font-size: 25px;
+    }
+    .font_size_20{
+        font-size: 20px;
+    }
+    .font_size_16{
+        font-size: 16px;
+    }
+    .font_size_14{
+        font-size: 14px;
+    }
+    .font_size_32{
+        font-size: 32px;
+    }
+    .font_size_30{
+        font-size: 30px;
+    }
+    .font_size_18{
+        font-size: 18px;
+    }
+</style>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<header style="min-width: 1350px">
+    <div style="width: 100%;display: inline-block;border-bottom: 1px solid;">
+        <div style="padding: 20px 10%;min-width: 1266px;">
+            <span onclick="fun_skip('/index_home')" style="cursor:pointer;">
+                <img src="{% static 'images/logo.png' %}" style="width: 30px;vertical-align: bottom;margin-right: 15px">
+                <span class="font_size_24" style="font-weight: bold;">FUN</span>
+            </span>
+            <ul class="font_size_14" style="display: inline-block;float: right;height: 59px;vertical-align: bottom; padding-top: 27px;font-weight: bold;">
+                <li class="li_class" onclick="fun_skip('/index_support_us')">Support Us</li>
+                <li class="li_class" onclick="fun_skip('/index_exhibition')">Exhibition</li>
+                <li class="li_class" onclick="fun_skip('/index_news')">News</li>
+                <li class="li_class" onclick="fun_skip('/index_education')">Education</li>
+                <li class="li_class" data-toggle="modal" data-target="#myModal" style="width: 100px;">login</li>
+                <li class="li_class">
+                    {% if user %}
+                    <div class="dropdown">
+                       <!--  <span class="glyphicon glyphicon-user font_size_20" id="dropdownMenu1" data-toggle="dropdown"></span> -->
+                       <img src="{{ user.image.url }}" id="dropdownMenu1" data-toggle="dropdown" style="width: 30px;height: 30px;border-radius: 50%;vertical-align: bottom;" onclick="head_xiala(this)">
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="/index_userinfo/">My account</a>
+                            </li>
+                            <!-- <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">Message to remind</a>
+                            </li> -->
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="/logout/">logout</a>
+                            </li>
+                        </ul>
+                        <!-- <span class="glyphicon glyphicon-envelope font_size_20" id="email_sms_id" style="margin-left: 20px"></span>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="email_sms_id">
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="#">Personal information</a>
+                            </li>
+                        </ul> -->
+
+                        <div class="btn-group">
+                            <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button> -->
+                            <span class="glyphicon glyphicon-envelope font_size_20" id="email_sms_id" data-toggle="dropdown" style="margin-left: 20px"></span>
+                            <ul class="dropdown-menu" role="menu" style="left: -65px">
+<!--                                 <li><a href="#">function</a></li> -->
+
+                                {% for i in remind %}
+                                <li><a href="/index_exhibition_detail/{{ i.remind_comment.comment_artwork.id }}/" style="color: red">{{ i.remind_comment.comment_text |slice:":3" | safe}}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    
+                    {% else %}
+                    <span class="glyphicon glyphicon-user font_size_20" id="user" data-toggle="modal"></span>
+                    {% endif %}
+                    <span class="glyphicon glyphicon-shopping-cart font_size_20" style="margin-left: 20px;" onclick="fun_skip('/index_basket')"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- （Modal） -->
+<div class="modal fade" id="myModal" tabindex="-3" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 0px;padding-bottom: 0;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="font-size: 50px;padding:10px;font-weight: normal;outline: none">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body" style="padding-top: 0">
+                <div style="margin: 10px 0;display: inline-block;width: 100%">
+                    <div style="padding-bottom: 5px">User Name</div>
+                    <div style="position: relative;display: inline-block;width: 100%">
+                        <input type="text" name="user" id="username" autocomplete="off" style="width: 100%;height: 35px;padding-left: 35px;border: 1px solid #228fdc;">
+                        <span style="color: #ccc;position: absolute;top: 6px;left: 10px" class="glyphicon glyphicon-user font_size_20" id="" data-toggle="modal" data-target="#myModal"></span>
+                    </div>
+
+                </div>
+                <div style="margin: 10px 0;display: inline-block;width: 100%">
+                    <div style="padding-bottom: 5px">Password</div>
+                    <div style="position: relative;">
+                        <input type="password" name="password" id="password" autocomplete="off" style="width: 100%;height: 35px;padding-left: 35px;border: 1px solid #228fdc;">
+                        <span style="color: #ccc;position: absolute;top: 6px;left: 10px" class="glyphicon glyphicon-lock font_size_20" id=""></span>
+                        <span style="color: #ccc;position: absolute;top: 6px;right: 10px;cursor: pointer;" class="glyphicon glyphicon-eye-open font_size_20" id="lookPwd"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="checkbox" name="" style="vertical-align: top;"> Remember Me
+                    <a href="#" onclick="forget()" style="float: right;">Forget the password？</a>
+                </div>
+
+                <div style="margin: 10px 0;display: inline-block;width: 100%">
+                    <button class="login_submit" style="width: 100%;border: none;outline: none;padding: 5px 0px;color: #228fdc;border: 1px solid #228fdc;background: #fff;font-size: 20px;font-weight: bold;">SIGN IN</button>
+                </div>
+
+                <!-- <div style="text-align: center;">Dont't have account?<a href="/index_register/">Sign up</a></div> -->
+                <div style="margin: 2% 0">
+                    <hr style="width: 45%;margin: 0;display: inline-block;vertical-align: middle;border-top: 1px solid #228fdc;">
+                    <span style="margin: 0 1%;color: #228fdc">OR</span>
+                    <hr style="width: 45%;margin: 0;display: inline-block;vertical-align: middle;border-top: 1px solid #228fdc;">
+                </div>
+
+                <div style="margin: 10px 0;display: inline-block;width: 100%;position: relative;">
+                    <!-- <span style="color: #ccc;position: absolute;top: 9px;left: 50px;font-size: 25px;" class="glyphicon glyphicon-user font_size_20" id=""></span> -->
+                    <img src="{% static 'images/foot1.png' %}" style="width: 30px;height: 30px;position: absolute;top: 5px;left: 50px;">
+                    <button style="width: 100%;border: none;outline: none;padding: 5px 0px;color: #9e9b9b;border: 1px solid #228fdc;background: #fff;height: 40px;">Sign in with Facebook</button>
+                </div>
+
+                <div style="margin: 10px 0;display: inline-block;width: 100%;position: relative;">
+                    <img src="{% static 'images/foot2.png' %}" style="width: 30px;height: 30px;position: absolute;top: 5px;left: 50px;">
+                    <button style="width: 100%;border: none;outline: none;padding: 5px 0px;color: #9e9b9b;border: 1px solid #228fdc;background: #fff;height: 40px;">Sign in with Twitter</button>
+                </div>
+
+                <div style="margin: 10px 0;display: inline-block;width: 100%;position: relative;">
+                    <span style="color: #ccc;position: absolute;top: 9px;left: 50px;font-size: 25px;" class="glyphicon glyphicon-user font_size_20" id=""></span>
+                    <button style="width: 100%;border: none;outline: none;padding: 5px 0px;color: #9e9b9b;border: 1px solid #228fdc;background: #fff;height: 40px;" onclick="jump_create()">Create new account</button>
+                </div>
+            </div>
+            
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+    <!-- （Modal） -->
+<div class="modal fade" id="myModalPassword" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="padding: 10px;height: 680px;">
+            <div class="modal-body">
+                <div style="font-size: 18px; text-align: center;">
+                    GET STARTED WITH A FREE TRIAL ACCOUNT
+                </div>
+                <div style="margin-bottom: 20px; margin-top: 20px;">
+                    <div>USERNAME<span style="color: red">*</span></div>
+                    <input type="text" name="username" id="username_id" style="width: 250px;height: 25px">
+                    <div style="color: #ccc;margin: 5px 0;font-size: 10px;">Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores</div>
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>E-MAIL-ADDRESS<span style="color: red">*</span></div>
+                    <input type="text" name="email" id="email_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>PASSWORD<span style="color: red">*</span></div>
+                    <input type="password" name="password" id="password_id" style="width: 250px;height: 25px">
+                    <div>
+                        <span id="password_span_id" style="color: red;"></span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>CONFIRM PASSWORD<span style="color: red">*</span></div>
+                    <input type="password" name="confirm_password" id="confirm_password_id" style="width: 200px;height: 25px">
+                    <div style="color: #ccc;margin: 5px 0;">Provide a password for the new account in both fields</div>
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>COUNTRY</div>
+                    <input type="text" name="country" id="country_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>CITY</div>
+                    <input type="text" name="city" id="city_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>ACCEPT TERMS<span style="color: red">*</span></div>
+                    <input type="checkbox" name="accept" id="accept_id" onchange="accept_onchange()">
+                    <span>I accept the <a href="" style="text-decoration:none;color: #0bb56e;">terms and conditions</a> and the <a href="" style="text-decoration:none;color: #0bb56e;">privacy policy</a> of FUN .com</span>
+                </div>
+
+                <button id="create_submit_id" style="border: none;background: #eee;color: #fff;padding: 1% 5%;outline: none;border-radius: 22px;" disabled="disabled" onclick="create_user_submit()">Create new account</button>
+            </div>    
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="myModalforgetid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="padding: 10px;height: 370px;">
+            <div class="modal-header" style="border-bottom: 0px;padding-bottom: 0;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="font-size: 50px;padding:0 10px;font-weight: normal;outline: none">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="" id="forget_name">
+                <input type="hidden" name="forget_name" id="forget_name_id">
+                <div style="font-size: 18px; text-align: center; padding: 0 0 20px 0;">
+                    RETRIEVE PASSWORD
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>Verification Code<span style="color: red">*</span></div>
+                    <input type="text" name="code" id="code_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>PASSWORD<span style="color: red">*</span></div>
+                    <input type="password" name="new_password" id="new_password_id" style="width: 250px;height: 25px">
+                </div>
+
+                <div style="margin-bottom: 20px">
+                    <div>AGAIN PASSWORD<span style="color: red">*</span></div>
+                    <input type="password" name="again_password" id="again_password" style="width: 250px;height: 25px">
+                </div>
+
+                <button  style="border: none;color: #fff;padding: 1% 5%;; background-color: #81b716; outline: none;border-radius: 22px;" onclick="forgetid_user_submit()">Submit</button>
+            </div>    
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+</header>
+
+
+
+<script type="text/javascript">
+
+    function forgetid_user_submit(){
+        var code = $('#code_id').val()
+        var new_password_id = $('#new_password_id').val()
+        var again_password = $('#again_password').val()
+
+        if (code == '' || code == null) {
+            alert('Please enter a verification code!')
+            return false
+        }
+        if (new_password_id == '' || new_password_id == null) {
+            alert('Please enter password')
+            return false
+        }
+
+        if (again_password == '' || again_password == null) {
+            alert('Please enter password')
+            return false
+        }
+
+        if (new_password_id == again_password) {
+            $.ajax({
+                url:'/edit_password/',
+                type:'post',
+                dataType:'json',
+                data:{
+                    'action':'edit_pass',
+                    'name':$("#forget_name").val(),
+                    'code':code,
+                    'new_password_id':new_password_id,
+                    'csrfmiddlewaretoken':'{{ csrf_token }}'
+                },
+                success:function(data){
+                    if (data.code == 0) {
+                        location.reload()
+                    }else{
+                        alert(data.err)
+                    }
+                }
+            })
+        }else{
+            alert('The two password inputs are inconsistent')
+        }
+    }
+
+    function forget(){
+        var name = $("#username").val()
+        
+        if (name == '' || name == null) {
+            alert('please input user')
+            return false
+        }
+        if(confirm("Confirm to retrieve password?")){
+            $("#myModalPassword").modal("hide");
+            $("#myModal").modal("hide")
+            $("#myModalforgetid").modal("show");
+
+            $("#forget_name").val(name);
+
+            $.ajax({
+                url:'/find_password/',
+                type:'post',
+                dataType:'json',
+                data:{
+                    'action':'find_pass',
+                    'name':$("#forget_name").val(),
+                    'csrfmiddlewaretoken':'{{ csrf_token }}'
+                },
+                success:function(data){
+                    if (data.code == 0) {
+
+                    }else{
+                        alert(data.data)
+                    }
+                }
+            })
+        }
+        
+    }
+
+    function head_xiala(obj){
+        if ($('.dropdown').hasClass('open')) {
+            console.log('1')
+            $('.dropdown').removeClass('open')
+            $(obj).attr('aria-expanded', false)
+
+        }else{
+            console.log('2')
+            $('.dropdown').addClass('open')
+            $(obj).attr('aria-expanded', true)
+        }
+    }
+    // Jump to Create
+    function jump_create(){
+        $("#myModalPassword").modal("show");
+        $("#myModal").modal("hide");
+    }
+    // Check whether to agree or not
+    function accept_onchange(){
+        var accept = $("#accept_id").is(':checked')
+        if(accept==true){
+            document.getElementById("create_submit_id").style.backgroundColor = "#81b716";
+            document.getElementById("create_submit_id").disabled=false;
+            document.getElementById("create_submit_id").style.cursor="pointer";
+        }else{
+            document.getElementById("create_submit_id").style.backgroundColor = "#eee";
+            document.getElementById("create_submit_id").disabled=true;
+            document.getElementById("create_submit_id").style.cursor="default";
+        }
+    };
+
+    // Determine the letter
+    function hasLetter(str) {
+        for (var i in str) {
+            var asc = str.charCodeAt(i);
+            if ((asc >= 65 && asc <= 90 || asc >= 97 && asc <= 122)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Submit a request
+    function create_user_submit(){
+        var username = $("#username_id").val()
+        var email = $("#email_id").val()
+        var password = $("#password_id").val()
+        var confirm_password = $("#confirm_password_id").val()
+        var country = $("#country_id").val()
+        var city = $("#city_id").val()
+        var flage = hasLetter(password) // Judge whether it fits
+        if (username.length>0 && email.length>0 && password.length>7 && flage == true && confirm_password.length>7 && password == confirm_password){
+            console.log('good!')
+        }else{
+            // The judgment is in the case of no value
+            if(username.length==0){
+                document.getElementById("username_id").style.border="1px solid red";
+            }
+            if(email.length==0){
+                document.getElementById("email_id").style.border="1px solid red";
+            }
+            if(password.length<7 || flage == false){
+                document.getElementById("password_id").style.border="1px solid red";
+                $("#password_id").val('')
+                $("#password_span_id").text('The password is at least 7 characters long and consists of Numbers and letters')
+                return
+                
+            }
+            if(confirm_password == password){
+                alert('The password is inconsistent, please re-enter!')
+                $("#confirm_password_id").val('')
+                document.getElementById("confirm_password_id").style.border="1px solid red";
+                return
+            }
+            alert("Please enter the value in the required field!")
+            return
+        };
+
+
+        $.ajax({
+            url:'/register_ajax/',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'create_user_action',
+                'username':username,
+                'email':email,
+                'password':password,
+                'country':country,
+                'city':city,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                if (data.code == 0) {
+                    $("#myModalPassword").modal("hide");
+                    $("#myModal").modal("show");
+                }else{
+                    alert(data.data)
+                }
+            }
+        })
+
+    }
+    // Page jump
+    function fun_skip(url){
+        window.location.href = url
+    }
+
+    $('.login_submit').click(function(){
+        var username = $('#username').val()
+        var password = $('#password').val()
+
+        $.ajax({
+            url:'/login_ajax/',
+            type:'post',
+            dataType:'json',
+            data:{
+                'action':'login_action',
+                'username':username,
+                'password':password,
+                'csrfmiddlewaretoken':'{{ csrf_token }}'
+            },
+            success:function(data){
+                // location.reload()
+                if (data.code == 0) {
+                    var path = window.location.pathname
+                    window.location.href = path
+                }else{
+                    alert(data.data)
+                }
+            }
+        })
+    });
+
+
+    $('#lookPwd').click(function(){
+        if ($('#password').attr('type') == 'text') {
+            $('#password').attr("type","password");
+        }else{
+            $('#password').attr("type","text");
+        }
+    })
+
+
+</script>
