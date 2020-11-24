@@ -9,13 +9,13 @@ from django.http import JsonResponse
 import datetime
 
 
-@csrf_exempt  # 视图函数可以被跨域访问
+@csrf_exempt  # Remove Django's csrf check function in this view request, and no security check.
 def backstage_user(request):
-    """后台编辑user信息"""
+    """Edit user information in the background"""
     ctx = {}
     q = ''
     action = request.POST.get('action', '')
-    # 更新用户信息
+    # Update user information
     if action == 'update_user':
         id = request.POST.get('user_id')
         name = request.POST.get('name')
@@ -33,7 +33,7 @@ def backstage_user(request):
             get_user.status = status
             get_user.admin_level = admin_level
             get_user.save()
-    # 添加新用户
+    # add new user
     if action == 'add_user':
         name = request.POST.get('name')
         phone = request.POST.get('phone')
@@ -44,7 +44,7 @@ def backstage_user(request):
         get_user = User.objects.filter(name=name).first()
         if not get_user:
             User.objects.create(name=name, phone=phone, email=email, money=money, status=status, admin_level=admin_level)
-    # 查询用户
+    # View User Information
     users = User.objects.all()
     if action == 'select_action':
         q = request.POST.get('q', '')
@@ -168,7 +168,7 @@ def register_ajax(request):
 
 @csrf_exempt
 def find_password(request):
-    """找回code码"""
+    """Retrieve Password"""
     import random
     action = request.POST.get('action', '')
 
@@ -191,7 +191,7 @@ def find_password(request):
 
 @csrf_exempt
 def edit_password(request):
-    """重置密码"""
+    """Repeat Password"""
     action = request.POST.get('action', '')
 
     if action == 'edit_pass':
@@ -209,7 +209,7 @@ def edit_password(request):
 
 @csrf_exempt
 def touch(request):
-    """发送邮件提建议"""
+    """User gives advice"""
     touch_name = request.POST.get('touch_name', '')
     touch_email = request.POST.get('touch_email', '')
     touch_subject = request.POST.get('touch_subject', '')
@@ -217,13 +217,13 @@ def touch(request):
     if touch_name and touch_message and touch_subject and touch_email:
         Proposal.objects.create(name=touch_name, email=touch_email, subject=touch_subject, message=touch_message)
         content = "email：" + str(touch_email) + "message:" + str(touch_message)
-        send_sms(touch_email, content)  # Submitted email sent successfully
+        send_sms('2738304473@qq.com', content) # Submitted email sent successfully
     return JsonResponse({'data': 'success'})
 
 
 @csrf_exempt
 def index_support_us(request):
-    """support us页面"""
+    """support us"""
     ctx = {}
     user = ''
     remind = []
@@ -240,7 +240,7 @@ def index_support_us(request):
 
 @csrf_exempt
 def index_home(request):
-    """主页"""
+    """hhomepage"""
     ctx = {}
     user = ''
     remind = []
@@ -277,7 +277,7 @@ def index_exhibition(request):
         user = User.objects.filter(id=request.session['uid']).first()
         if user:
             remind = Remind.objects.filter(flag=0, status=0, remind_user=user)
-    onnows = OnNowArtwork.objects.filter(status=0).order_by('sequence')[0:6]  # 取在展艺术品前6个
+    onnows = OnNowArtwork.objects.filter(status=0).order_by('sequence')[0:6]  # Select the top three artworks on the homepage
     for x in onnows:
         onnows_id_list.append(x.on_now_artwork.id)
 
@@ -294,7 +294,7 @@ def index_exhibition(request):
 
         # Check what is on display
         onnows = OnNowArtwork.objects.filter(status=0)
-        # 判断用户是否选择artist, year, medium, search
+        # Determine whether the user chooses artist, year, medium and search
         if artist != 'A-Z':
             onnows = onnows.filter(on_now_artwork__artist_letter=artist)
         if year != '0':
@@ -308,7 +308,7 @@ def index_exhibition(request):
         for x in onnows:
             onnows_id_list.append(x.on_now_artwork.id)
 
-        past_exhibitions = Artwork.objects.filter(status=0).exclude(id__in=onnows_id_list)  # 历史艺术品
+        past_exhibitions = Artwork.objects.filter(status=0).exclude(id__in=onnows_id_list)  
         if artist != 'A-Z':
             past_exhibitions = past_exhibitions.filter(artist=artist)
         if year != '0':
@@ -408,7 +408,7 @@ def index_exhibition_detail(request, id):
         id = request.POST.get('id')
         get_comment = Comment.objects.filter(id=id).first()
         get_fabulou_comment = FabulousComment.objects.filter(fabulous_Comment=get_comment, fabulousComment_user=user).first()  # 查出用户点赞的评论
-        if get_fabulou_comment:  # 如果用户已经点赞过评论
+        if get_fabulou_comment:  # If the user has already liked the comment
             if get_fabulou_comment.status == 0:
                 get_fabulou_comment.status = -1
                 get_comment.fabulous_num = get_comment.fabulous_num - 1
@@ -419,7 +419,7 @@ def index_exhibition_detail(request, id):
                 get_comment.save()
                 flag = 1
             get_fabulou_comment.save()
-        else:  # 否则创建新的评论点赞
+        else:  #Otherwise create a new comment like
             FabulousComment.objects.create(fabulous_Comment=get_comment, fabulousComment_user=user, status=0)
             get_comment.fabulous_num += 1
             get_comment.save()
@@ -521,7 +521,7 @@ def index_exhibition_detail(request, id):
                 'id': comment.id,
             }
         return JsonResponse(ctx)
-    # 创建浏览记录
+    # Create browsing history
     if user:
         Browse.objects.create(browse_user=user, browse_artwork=get_artwork)
         get_fabulous = Fabulous.objects.filter(fabulous_artwork=get_artwork, fabulous_user=user, status=0).first()  # Check to see if you've liked it
@@ -532,7 +532,7 @@ def index_exhibition_detail(request, id):
         get_artwork.look_number += 1
         get_artwork.save()
 
-    comment = Comment.objects.filter(comment_artwork=get_artwork, parent=None).order_by('-fabulous_num', '-create_time')  # comment按照fabulous_num, create_time倒序排序展示
+    comment = Comment.objects.filter(comment_artwork=get_artwork, parent=None).order_by('-fabulous_num', '-create_time')  # Comments are displayed in reverse order of fabulous_num, create_time
     ctx['likeflag'] = likeflag
     ctx['artwork'] = get_artwork
     ctx['user'] = user
@@ -544,7 +544,7 @@ def index_exhibition_detail(request, id):
 
 @csrf_exempt
 def index_news(request):
-    """新闻页展示"""
+    """news page"""
     ctx = {}
     user = ''
     remind = []
@@ -563,7 +563,7 @@ def index_news(request):
 
 @csrf_exempt
 def index_news_detail(request, news_id):
-    """单个新闻详情展示"""
+    """news detail"""
     ctx = {}
     user = ''
     remind = []
@@ -581,7 +581,7 @@ def index_news_detail(request, news_id):
 
 @csrf_exempt
 def index_shopping(request):
-    """购物界面"""
+    """shopping page"""
     ctx = {}
     user = ''
     remind = []
@@ -600,7 +600,6 @@ def index_shopping(request):
 
 
 def index_shopping_detail(request, commodity_id):
-    """添加商品到购物车"""
     ctx = {}
     user = ''
     remind = []
@@ -611,19 +610,19 @@ def index_shopping_detail(request, commodity_id):
             remind = Remind.objects.filter(flag=0, status=0, remind_user=user)
 
     action = request.POST.get('action', '')
-    # 添加商品到购物车
+    # add items to shopping car
     if action == 'add':
         commodity_id = request.POST.get('commodity_id', '')
         num = request.POST.get('num', '')
         commodity = Commodity.objects.filter(id=commodity_id, status=0).first()
         if user:
             shoppingCart = ShoppingCart.objects.filter(shoppingCart_user=user, shoppingCart_commodity=commodity, flag=0, status=0).first()
-            if commodity.number == 0:  # 判断商品库存是否为0
+            if commodity.number == 0:  # Determine whether the product inventory is 0
                 return JsonResponse({'code': -1, 'err': 'The inventory has been 0, can not be added'})
-            if shoppingCart:  # 判断用户在购物车之前是否已经添加过该商品
+            if shoppingCart:  # Determine whether the user has added the product before the shopping cart
                 shoppingCart.shopping_num = shoppingCart.shopping_num + int(num)
                 shoppingCart.save()
-            else:  # 否则创建新的购物车记录
+            else:  # Otherwise create a new shopping cart record
                 shoppingCart = ShoppingCart.objects.create(
                     shoppingCart_commodity=commodity,
                     shoppingCart_user=user,
@@ -645,7 +644,7 @@ def index_shopping_detail(request, commodity_id):
 
 
 def index_basket(request):
-    """结算购物车界面"""
+    """payment page"""
     ctx = {}
     remind = []
     user = ''
@@ -657,12 +656,12 @@ def index_basket(request):
             is_ShoppingCart = ShoppingCart.objects.filter(shoppingCart_user=user, flag=0, status=0)
             if len(is_ShoppingCart) == 0:
                 return redirect(index_shopping)
-        # 购物车界面添加商品数量
+        # Add the number of items to the shopping cart interface
         if action == 'add_num':
             shoppingCart_id = request.POST.get('shoppingCart_id', '')
             money_all = 0
             shoppingCart = ShoppingCart.objects.filter(id=shoppingCart_id, status=0, flag=0).first()
-            if shoppingCart.shoppingCart_commodity.number == 0:  # 判断商品库存
+            if shoppingCart.shoppingCart_commodity.number == 0:  # Judging product inventory
                 return JsonResponse({'code': -1, 'err': 'The inventory has been 0, can not be added'})
 
             if shoppingCart:
@@ -677,7 +676,7 @@ def index_basket(request):
                 money_all = temp + money_all
             return JsonResponse(
                 {'code': 0, 'msg': 'success', 'num': shoppingCart.shopping_num, 'money_all': round(money_all, 2)})
-        # 购物车界面减商品数量
+        # Shopping cart interface to reduce the number of items
         if action == 'jian_num':
             shoppingCart_id = request.POST.get('shoppingCart_id', '')
             money_all = 0
@@ -699,7 +698,7 @@ def index_basket(request):
 
             return JsonResponse(
                 {'code': 0, 'msg': 'success', 'num': shoppingCart.shopping_num, 'money_all': round(money_all, 2)})
-        #  添加购物地址
+        #  Add shopping address
         if action == 'add_address':
             gw_country_id = request.POST.get('gw_country_id', '')
             gw_city_id = request.POST.get('gw_city_id', '')
@@ -711,12 +710,12 @@ def index_basket(request):
                 address_info=gw_address_info
             )
             return JsonResponse({'code': 0, 'msg': 'success'})
-        # 结算
+        # check out
         if action == 'checkout':
             address = request.POST.get('address', '')
             zong_monery = request.POST.get('zong_monery', '')
             address = Address.objects.filter(id=address, status=0).first()
-            if user.money - float(zong_monery) < 0:  # 判断是否用户的钱-商品总金额<0
+            if user.money - float(zong_monery) < 0:  # Determine if the user's money - total amount of goods <0
                 return JsonResponse({'code': -1, 'err': 'Lack of balance'})
             Order.objects.create(
                 order_user=user,
@@ -736,7 +735,7 @@ def index_basket(request):
             temp = i.shoppingCart_commodity.money * i.shopping_num
             money_all = temp + money_all
         ctx['shoppingCart'] = shoppingCart
-        ctx['money_all'] = round(money_all, 2)  # 保留2位小数
+        ctx['money_all'] = round(money_all, 2)  # Keep 2 decimal places
         ctx['address'] = address
 
     ctx['user'] = user
@@ -746,7 +745,7 @@ def index_basket(request):
 
 @csrf_exempt
 def index_education(request):
-    """education模块"""
+    """education page"""
     ctx = {}
     remind = []
     user = ''
@@ -765,7 +764,7 @@ def index_education(request):
 
 @csrf_exempt
 def index_education_detail(request, education_id):
-    """education详情"""
+    """education detail"""
     ctx = {}
     user = ''
     remind = []
@@ -801,7 +800,7 @@ def index_userinfo(request):
         email = request.POST.get('email', '')
         country = request.POST.get('country', '')
         city = request.POST.get('city', '')
-        head = request.FILES.get('head', '')  # 头像
+        head = request.FILES.get('head', '')  
 
         user.public_name = username
         user.email = email
@@ -811,7 +810,7 @@ def index_userinfo(request):
             user.image = head
         user.save()
 
-    # 查询用户浏览记录最近6条，按browse_artwork__id排序
+    # Query the last 6 user browsing records, sorted by browse_artwork__id
     browses = Browse.objects.values('browse_artwork__id', 'browse_artwork__title', 'browse_artwork__img').filter(status=0, browse_user=user).distinct().order_by('-browse_artwork__id')[:6]
     for i in browses:
         d = {
