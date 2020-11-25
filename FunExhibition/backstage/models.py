@@ -2,14 +2,14 @@ from django.db import models
 
 
 class User(models.Model):
-    """用户"""
+    """user"""
     class Meta:
         db_table = 'user'
         verbose_name = verbose_name_plural = 'user'
 
-    status = models.IntegerField(verbose_name='STATUS', default=0)  # -1表示软删除，0表示状态正常
-    create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)  # 创建时间
-    update_time = models.DateTimeField(auto_now=True, null=True, blank=True)  # 更新时间
+    status = models.IntegerField(verbose_name='STATUS', default=0)  
+    create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)  # Creation time
+    update_time = models.DateTimeField(auto_now=True, null=True, blank=True)  # update time
     name = models.CharField(verbose_name='USERNAME', max_length=100)
     public_name = models.CharField(verbose_name='PUBLIC NAME', max_length=100, null=True, blank=True)
     country = models.CharField(verbose_name='COUNTRY', max_length=100, null=True, blank=True)
@@ -18,18 +18,18 @@ class User(models.Model):
     phone = models.CharField(verbose_name='PHONE', max_length=100, null=True, blank=True)
     email = models.CharField(verbose_name='E-MAIL', max_length=100, null=True, blank=True)
     money = models.FloatField(verbose_name='MONEY', default=0)
-    admin_level = models.IntegerField(verbose_name='admin level', default=0)  # 0正常用户，1管理员
+    admin_level = models.IntegerField(verbose_name='admin level', default=0)  # 0 normal users, 1 administrator
     image = models.ImageField(upload_to='user_img', default="user_img/user.png")
     code = models.CharField(max_length=250, null=True, blank=True, verbose_name='code')
 
 
 class Address(models.Model):
-    """用户地址"""
+    """user's address"""
     class Meta:
         verbose_name = verbose_name_plural = 'address'
         db_table = 'address'
 
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='用户')
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name='user')
     country = models.CharField(verbose_name='COUNTRY', max_length=100, null=True, blank=True)
     city = models.CharField(verbose_name='CITY', max_length=100, null=True, blank=True)
     address_info = models.TextField(null=True, blank=True, verbose_name='address_info')
@@ -39,7 +39,7 @@ class Address(models.Model):
 
 
 class Artwork(models.Model):
-    """艺术品"""
+    """artworks"""
     class Meta:
         db_table = 'artwork'
         verbose_name = verbose_name_plural = 'artwork'
@@ -50,7 +50,7 @@ class Artwork(models.Model):
     img = models.ImageField(null=True, upload_to='artwork_img')
     artist = models.CharField(verbose_name='artist', max_length=200, null=True, blank=True)
     artist_letter = models.CharField(verbose_name='artist_letter', max_length=10, null=True, blank=True)
-    year = models.IntegerField(verbose_name='年份', null=True, blank=True)
+    year = models.IntegerField(verbose_name='year', null=True, blank=True)
     time = models.CharField(verbose_name='time', max_length=200, null=True, blank=True)
     medium = models.ForeignKey('Medium', verbose_name='medium_id', null=True, blank=True, on_delete=models.CASCADE, related_name='artwork_medium')
     title = models.CharField(verbose_name='title', max_length=200)
@@ -65,7 +65,7 @@ class Artwork(models.Model):
 
 
 class OnNowArtwork(models.Model):
-    """在展艺术品"""
+    """on now"""
     class Meta:
         db_table = 'onNowArtwork'
         verbose_name = verbose_name_plural = 'onNowArtwork'
@@ -91,7 +91,7 @@ class Medium(models.Model):
         return self.name
 
 
-class Like(models.Model):  # 没用到的model
+class Like(models.Model):  # Currently unused model
     class Meta:
         db_table = 'like'
         verbose_name = verbose_name_plural = 'fabulous'
@@ -104,7 +104,7 @@ class Like(models.Model):  # 没用到的model
 
 
 class Comment(models.Model):
-    """评论"""
+    """comments"""
     class Meta:
         db_table = 'comment'
         verbose_name = verbose_name_plural = 'comment'
@@ -116,7 +116,7 @@ class Comment(models.Model):
     comment_artwork = models.ForeignKey('Artwork', verbose_name='artwork', null=True, blank=True, on_delete=models.CASCADE, related_name='comment_artwork')
     comment_user = models.ForeignKey('User', verbose_name='comment_user', null=True, blank=True, on_delete=models.CASCADE, related_name='comment_user')
     comment_text = models.CharField(verbose_name='comment_text', max_length=2000)
-    fabulous_num = models.IntegerField(verbose_name="fabulous_num", default=0)  # 点赞数
+    fabulous_num = models.IntegerField(verbose_name="fabulous_num", default=0)  #Number of fabulous
 
     @property
     def get_children(self):
@@ -124,7 +124,7 @@ class Comment(models.Model):
 
 
 class FabulousComment(models.Model):
-    """点赞的评论"""
+    """Like the comment"""
     class Meta:
         db_table = 'fabulousComment'
         verbose_name = verbose_name_plural = 'fabulousComment'
@@ -137,7 +137,7 @@ class FabulousComment(models.Model):
 
 
 class Fabulous(models.Model):
-    """点赞"""
+    """thumbs up"""
     class Meta:
         db_table = 'fabulous'
         verbose_name = verbose_name_plural = 'fabulous'
@@ -150,7 +150,7 @@ class Fabulous(models.Model):
 
 
 class Browse(models.Model):
-    """浏览记录"""
+    """Browsing history"""
     class Meta:
         db_table = 'browse'
         verbose_name = verbose_name_plural = 'browse'
@@ -164,7 +164,7 @@ class Browse(models.Model):
 
 
 class HomeSelected(models.Model):
-    """主页精选"""
+    """homeselect"""
     class Meta:
         db_table = 'homeSelected'
         verbose_name = verbose_name_plural = 'homeSelected'
@@ -173,11 +173,11 @@ class HomeSelected(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_time = models.DateTimeField(auto_now=True, null=True, blank=True)
     home_artwork = models.ForeignKey('Artwork', verbose_name='artwork', null=True, blank=True, on_delete=models.CASCADE, related_name='home_artwork')
-    sequence = models.IntegerField(verbose_name='sequence', default=0)  # 顺序
+    sequence = models.IntegerField(verbose_name='sequence', default=0)  
 
 
 class Commodity(models.Model):
-    """商品"""
+    """commodity"""
     class Meta:
         db_table = 'commodity'
         verbose_name = verbose_name_plural = 'commodity'
@@ -206,12 +206,12 @@ class ShoppingCart(models.Model):
     shoppingCart_commodity = models.ForeignKey('Commodity', verbose_name='commodity', null=True, blank=True, on_delete=models.CASCADE, related_name='shoppingCart_commodity')
     shoppingCart_user = models.ForeignKey('User', verbose_name='user', null=True, blank=True, on_delete=models.CASCADE, related_name='shoppingCart_user')
     shopping_num = models.IntegerField(verbose_name='number', default=1)
-    flag = models.IntegerField(verbose_name='status', default=0)  # 0 带支付， 1支付成功， -1 取消支付
+    flag = models.IntegerField(verbose_name='status', default=0)  # 0 with payment, 1 paid successfully, -1 cancelled payment
     order_num = models.CharField(verbose_name='sell_number', max_length=100, blank=True, null=True)
 
 
 class Order(models.Model):
-    """订单"""
+    """order"""
     class Meta:
         db_table = 'order'
         verbose_name = verbose_name_plural = 'order'
@@ -224,7 +224,7 @@ class Order(models.Model):
     order_money = models.FloatField(verbose_name="money", default=0)
     address = models.ForeignKey('Address', null=True, blank=True, verbose_name='address', on_delete=models.CASCADE)
 
-    # 属性方法，根据订单号查够卖的商品
+    # Property method, according to the order number to find enough goods sold
     @property
     def get_shopping(self):
         shoppings = ShoppingCart.objects.filter(order_num=self.order_num, flag=0)
@@ -232,7 +232,7 @@ class Order(models.Model):
 
 
 class Proposal(models.Model):
-    """提建议"""
+    """proposal"""
     class Meta:
         db_table = 'proposal'
         verbose_name = verbose_name_plural = 'proposal'
@@ -247,7 +247,7 @@ class Proposal(models.Model):
 
 
 class News(models.Model):
-    """新闻"""
+    """news"""
     class Meta:
         db_table = 'news'
         verbose_name = verbose_name_plural = 'news'
@@ -268,7 +268,7 @@ class News(models.Model):
 
 
 class Education(models.Model):
-    """教育"""
+    """education"""
     class Meta:
         db_table = 'education'
         verbose_name = verbose_name_plural = 'education'
@@ -284,7 +284,7 @@ class Education(models.Model):
 
 
 class Remind(models.Model):
-    """用户信息提醒"""
+    """User information reminder"""
     class Meta:
         db_table = 'remind'
         verbose_name = verbose_name_plural = 'remind'
@@ -292,6 +292,6 @@ class Remind(models.Model):
     status = models.IntegerField(verbose_name='STATUS', default=0)
     create_time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     update_time = models.DateTimeField(auto_now=True, null=True, blank=True)
-    flag = models.IntegerField(verbose_name='status', default=0)  # 0没有查看
+    flag = models.IntegerField(verbose_name='status', default=0)  # 0 not viewed
     remind_comment = models.ForeignKey('Comment', verbose_name='数据', null=True, blank=True, on_delete=models.CASCADE, related_name='remind_comment')
     remind_user = models.ForeignKey('User', verbose_name='user', null=True, blank=True, on_delete=models.CASCADE, related_name='remind_user')

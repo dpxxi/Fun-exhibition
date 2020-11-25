@@ -3,13 +3,13 @@ from .models import *
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['name', 'country', 'status']  # admin后台展示的字段
-    list_filter = ['name']  # 后边查询
-    ordering = ['name']  # 排序
+    list_display = ['name', 'country', 'status']  # Fields displayed in the background of admin
+    list_filter = ['name']  
+    ordering = ['name']  
     search_fields = ['name']
 
 
-# model必须在admin.py中注册后才能在界面上显示
+# The model must be registered in admin.py before it can be displayed on the interface
 admin.site.register(User, UserAdmin)
 admin.site.register(Artwork)
 admin.site.register(Medium)

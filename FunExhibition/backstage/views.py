@@ -240,7 +240,7 @@ def index_support_us(request):
 
 @csrf_exempt
 def index_home(request):
-    """hhomepage"""
+    """homepage"""
     ctx = {}
     user = ''
     remind = []
@@ -249,8 +249,8 @@ def index_home(request):
         if user:
             remind = Remind.objects.filter(flag=0, status=0, remind_user=user)
 
-    artwork_lists = Artwork.objects.filter(status=0).order_by('-look_number')[0:3]  # 艺术品按浏览量取前3
-    home_selected_list = HomeSelected.objects.filter(status=0).order_by('sequence')[0:3]  # 取
+    artwork_lists = Artwork.objects.filter(status=0).order_by('-look_number')[0:3]  # Artwork should be ranked top 3 by the number of views
+    home_selected_list = HomeSelected.objects.filter(status=0).order_by('sequence')[0:3]  
     ctx['home_selected_list'] = home_selected_list
     ctx['user'] = user
     ctx['artwork_lists'] = artwork_lists
@@ -260,7 +260,7 @@ def index_home(request):
 
 @csrf_exempt
 def index_exhibition(request):
-    """exhibition模块"""
+    """exhibition model"""
     ctx = {}
     user = ''
     action = request.POST.get('action')
@@ -396,7 +396,7 @@ def index_exhibition_detail(request, id):
     if 'uid' in request.session:
         user = User.objects.filter(id=request.session['uid']).first()
     if user:
-        is_remind = Remind.objects.filter(remind_user=user, remind_comment__comment_artwork__id=id, status=0, flag=0).first()  # 查询是否有提醒
+        is_remind = Remind.objects.filter(remind_user=user, remind_comment__comment_artwork__id=id, status=0, flag=0).first()  # Check if there is a reminder
         if is_remind:
             is_remind.flag = 1
             is_remind.save()
@@ -407,7 +407,7 @@ def index_exhibition_detail(request, id):
         flag = 0  # no thumb up
         id = request.POST.get('id')
         get_comment = Comment.objects.filter(id=id).first()
-        get_fabulou_comment = FabulousComment.objects.filter(fabulous_Comment=get_comment, fabulousComment_user=user).first()  # 查出用户点赞的评论
+        get_fabulou_comment = FabulousComment.objects.filter(fabulous_Comment=get_comment, fabulousComment_user=user).first()  # Find user thumb up's comments
         if get_fabulou_comment:  # If the user has already liked the comment
             if get_fabulou_comment.status == 0:
                 get_fabulou_comment.status = -1
@@ -592,7 +592,7 @@ def index_shopping(request):
             remind = Remind.objects.filter(flag=0, status=0, remind_user=user)
 
     # Search for items and sort by sales volume
-    commodities = Commodity.objects.filter(status=0).order_by('-sell_number')  # 按照销量倒序排序
+    commodities = Commodity.objects.filter(status=0).order_by('-sell_number')  # Order in reverse order by sales volume
     ctx['commodities'] = commodities
     ctx['user'] = user
     ctx['remind'] = remind

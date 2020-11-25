@@ -3,7 +3,7 @@ from .models import User
 
 
 def user_required(view_func):
-    """需要用户登录"""
+    """User login required"""
     def wrapper(request, *args, **kwargs):
         if 'uid' not in request.session:
             return redirect('index_home')

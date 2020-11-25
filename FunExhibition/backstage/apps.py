@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class BackstageConfig(AppConfig):
-    """设置app的名称"""
+    """Set the name of the app"""
     name = 'backstage'
